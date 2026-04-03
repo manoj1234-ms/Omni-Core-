@@ -62,7 +62,9 @@ def get_global_stats():
         "drift_blocks": core.goal_tree.drift_count
     })
 
+import os
 if __name__ == "__main__":
-    # Starting the Global AI Brain on Localhost:5000 (Development Port)
-    print("🚀 [GLOBAL GATEWAY]: Launching World-AI Entrance Portal...")
-    app.run(host="0.0.0.0", port=5000)
+    # Starting the Global AI Brain on a Dynamic Port for Cloud Compatibility
+    port = int(os.environ.get("PORT", 5000))
+    print(f"🚀 [GLOBAL GATEWAY]: Launching World-AI Entrance Portal on Port {port}...")
+    app.run(host="0.0.0.0", port=port)
