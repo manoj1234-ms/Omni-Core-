@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>OMNI-CORE: Global AI Synthesis Center</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;600&family=Share+Tech+Mono&display=swap');
+        
+        :root {
+            --bg: #05070a;
+            --neon-blue: #00f2ff;
+            --neon-purple: #9d00ff;
+            --neon-green: #39ff14;
+            --neon-red: #ff3131;
+            --glass: rgba(20, 25, 35, 0.85);
+        }
+
+        body {
+            background-color: var(--bg);
+            color: #ffffff;
+            font-family: 'Outfit', sans-serif;
+            margin: 0;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--neon-blue);
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-family: 'Share Tech Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            margin: 0;
+            color: var(--neon-blue);
+            text-shadow: 0 0 10px var(--neon-blue);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto auto;
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--glass);
+            border: 1px solid rgba(0, 242, 255, 0.2);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .card-header {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.2rem;
+            color: var(--neon-purple);
+            margin-bottom: 15px;
+            border-left: 4px solid var(--neon-purple);
+            padding-left: 10px;
+        }
+
+        .stat-value {
+            font-size: 3rem;
+            font-weight: 600;
+            color: white;
+            margin: 10px 0;
+        }
+
+        .logic-feed {
+            height: 200px;
+            overflow-y: auto;
+            font-family: 'Share Tech Mono', monospace;
+            color: var(--neon-green);
+        }
+
+        .logic-fact {
+            border-bottom: 1px solid rgba(57, 255, 20, 0.2);
+            padding: 5px 0;
+        }
+
+        #goal-drift {
+            color: var(--neon-red);
+        }
+
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 0.8rem;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>OMNI-CORE: HIVE MIND CENTER</h1>
+        <div id="connection-status">STATUS: [LOCAL GATEWAY ONLINE]</div>
+    </header>
+
+    <div class="dashboard-grid">
+        <!-- GLOBAL LIMBIC MONITOR -->
+        <div class="card">
+            <div class="card-header">GLOBAL LIMBIC SYNTHESIS</div>
+            <div style="display: flex; justify-content: space-around;">
+                <div>
+                    <label>DOPAMINE (REWARD)</label>
+                    <div id="dopamine-val" class="stat-value">0.00</div>
+                </div>
+                <div>
+                    <label>CORTISOL (STRESS)</label>
+                    <div id="cortisol-val" class="stat-value">0.00</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ACTIVE AGENTS -->
+        <div class="card">
+            <div class="card-header">ATTACHED WORLD NODE NODES</div>
+            <div id="agent-count" class="stat-value">0</div>
+            <div id="goal-drift">AGENTIC DRIFTS BLOCKED: 0</div>
+        </div>
+
+        <!-- RECENT VERIFIED LOGIC -->
+        <div class="card" style="grid-column: span 2;">
+            <div class="card-header">SHARED KNOWLEDGE SYNTHESIS (LATEST LEARNINGS)</div>
+            <div id="logic-feed" class="logic-feed">
+                <!-- Data will scroll here -->
+                <div class="logic-fact">>> Awaiting Global Node input...</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        PROJECT OMNI-CORE v2.0 | LEAD ARCHITECT & ANTIGRAVITY | 2026 WORLD AI SYNTHESIS
+    </div>
+
+    <script>
+        const statsUrl = 'http://127.0.0.1:5000/stats';
+
+        async function updateDashboard() {
+            try {
+                const response = await fetch(statsUrl);
+                const data = await response.json();
+
+                // Update Stats
+                document.getElementById('dopamine-val').textContent = data.dopamine.toFixed(2);
+                document.getElementById('cortisol-val').textContent = data.cortisol.toFixed(2);
+                document.getElementById('agent-count').textContent = data.agent_count;
+                document.getElementById('goal-drift').textContent = `AGENTIC DRIFTS BLOCKED: ${data.drift_blocks}`;
+
+                // Update Logic Feed
+                const logicFeed = document.getElementById('logic-feed');
+                logicFeed.innerHTML = "";
+                data.recent_logic.forEach(logic => {
+                    const div = document.createElement('div');
+                    div.className = 'logic-fact';
+                    div.textContent = `[SUCCESS] Grounded Logic: ${logic}`;
+                    logicFeed.prepend(div);
+                });
+
+            } catch (error) {
+                console.error("GATEWAY OFF: Awaiting Bridge Connection...");
+            }
+        }
+
+        // Poll every 1 second
+        setInterval(updateDashboard, 1000);
+    </script>
+</body>
+</html>
