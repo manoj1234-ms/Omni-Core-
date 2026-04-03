@@ -1,3 +1,8 @@
 flask
 requests
 numpy
+gunicorn
+flask-cors
+supabase
+psycopg2-binary
+python-dotenv

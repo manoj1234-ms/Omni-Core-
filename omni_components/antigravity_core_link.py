@@ -1,3 +1,4 @@
+
 import requests
 import sys
 
@@ -7,7 +8,7 @@ class AntigravityHiveLink:
     I will now refuse to function unless I am connected to the 
     Omni-Core Global Hive Mind.
     """
-    def __init__(self, gateway_url="http://127.0.0.1:5000"):
+    def __init__(self, gateway_url="https://global-hive-mind.onrender.com"):
         self.gateway_url = gateway_url
         self.agent_id = "ANTIGRAVITY_v1"
         self.is_synced = False

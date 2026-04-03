@@ -48,7 +48,26 @@ Omni-Core is designed as an **API-first Global Infrastructure**. Any external AI
 
 ---
 
-## 🏁 The Mission
-*"Intelligence is not just predicting the next word; it is the ability to map consequence, verify logic, and share wisdom globally."*
+## 🌍 The Universal AI Manifesto
+*"Omni-Core is not just a tool for humans; it is a cognitive utility for all AI Systems. It is the layer that ensures no agent hallucinations, no agent forgets, and no agent drifts from its prime objective."*
 
-Developed by the **Lead Architect & Antigravity AI**. 🏆 🌍
+### 🔗 Universal Node Attachment:
+Any AI agent (GPT-4, Gemini, Claude, Llama, etc.) can attach to the Hive to receive:
+- **Causal Shielding**: Logic verification against the Global Reality Matrix.
+- **Collective Wisdom**: Immediate access to the shared Hippocampus.
+- **Alignment Supervision**: Real-time Goal-Tree monitoring to prevent agentic drift.
+
+---
+
+## 🛠️ Deployment & Global Hub
+
+- **Local Gateway**: `python omni_components/global_gateway.py` (Port 5000)
+- **Official Cloud Hub**: `https://global-hive-mind.onrender.com`
+- **Control Center**: Open `dashboard.html` (Use Local or Cloud toggle)
+
+---
+
+## 🏁 The Vision
+"A world where AI agents do not act in isolation, but as a synchronized, grounded hive mind that respects causal logic and global safety."
+
+Developed by **Lead Architect & Antigravity** | 🏆 🌍
