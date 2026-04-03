@@ -3,6 +3,46 @@
 **Omni-Core** is a next-generation, decentralized AGI framework designed to serve as a **Universal Brain** for every AI agent and Operating System in the world. It provides a shared layer of **Stateful Memory**, **Emotional Regulation**, and **Causal Logic Verification** to eliminate Hallucination, Catastrophic Forgetting, and Agentic Drift on a global scale.
 
 ---
+## 🏗️ Architecture Visualization
+
+```mermaid
+graph TD
+    classDef ai fill:#0f141e,stroke:#00f2ff,stroke-width:2px,color:#fff
+    classDef core fill:#1a0f2e,stroke:#bd00ff,stroke-width:2px,color:#fff
+    classDef db fill:#002200,stroke:#39ff14,stroke-width:2px,color:#fff
+
+    subgraph External_AI_Agents ["🌍 Isolated Client AI Agents"]
+        A1[ChatGPT Custom GPT]:::ai
+        A2[LangChain / AutoGen]:::ai
+        A3[Desktop Tools / APIs]:::ai
+    end
+
+    subgraph OmniCore_Hub ["🧠 Omni-Core Global Hub (Render)"]
+        B{HTTP Gateway API}:::core
+        C[Causal Validator Shield]:::core
+        D[Executive Goal Monitor]:::core
+        F[Synthetic Limbic System]:::core
+    end
+
+    subgraph Storage ["💾 Persistent Hive Memory"]
+        E[(L3 Supabase Cloud Vault)]:::db
+    end
+
+    A1 -->|POST /think| B
+    A2 -->|GET /hippocampus| B
+    A3 -->|POST /attach| B
+
+    B -->|Route| C
+    B -->|Check Drift| D
+    B -->|Hardware Meta| F
+    
+    C -- "Verify / Sync Logic" --> E
+    D -- "Success/Stress Metrics" --> F
+    
+    F -. "Modulates Confidence" .-> C
+```
+
+---
 
 ## 🧠 The Four Cognitive Pillars (SOTA 2026)
 
