@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Omni-Core AGI: The Universal Cognitive Plugin for AI Agents. Prevent Hallucination, Enable Cloud Memory.">
+    <title>Omni-Core AGI | The Universal AI Brain</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=JetBrains+Mono:wght@400;700&display=swap');
+        
+        :root {
+            --bg: #000205;
+            --primary: #00f2ff;
+            --secondary: #bd00ff;
+            --text: #e0e0e0;
+            --glass: rgba(15, 20, 30, 0.7);
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Space Grotesk', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(0, 242, 255, 0.08), transparent 40%),
+                radial-gradient(circle at 85% 30%, rgba(189, 0, 255, 0.08), transparent 40%);
+        }
+
+        /* Ambient Cyber-Grid */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: linear-gradient(rgba(0, 242, 255, 0.03) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(0, 242, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: -1;
+        }
+
+        header {
+            width: 100%;
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0,242,255,0.1);
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-symbol {
+            color: var(--primary);
+            text-shadow: 0 0 10px var(--primary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 80px auto;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        h1 {
+            font-size: 4.5rem;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, #fff, var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p.subtitle {
+            font-size: 1.3rem;
+            color: rgba(255,255,255,0.6);
+            max-width: 700px;
+            margin: 0 auto 50px;
+            line-height: 1.6;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 80px;
+        }
+
+        .btn {
+            background: transparent;
+            color: var(--text);
+            border: 1px solid var(--primary);
+            padding: 15px 35px;
+            font-size: 1.1rem;
+            border-radius: 30px;
+            text-decoration: none;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'JetBrains Mono', monospace;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .btn-glow {
+            background: rgba(0, 242, 255, 0.1);
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.3);
+        }
+
+        .btn:hover {
+            background: var(--primary);
+            color: var(--bg);
+            box-shadow: 0 0 30px var(--primary);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            text-align: left;
+        }
+
+        .feature-card {
+            background: var(--glass);
+            border: 1px solid rgba(255,255,255,0.05);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(20px);
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(189, 0, 255, 0.4);
+        }
+
+        .feature-card h3 {
+            color: var(--secondary);
+            font-family: 'JetBrains Mono', monospace;
+            margin-top: 0;
+        }
+
+        .code-block {
+            background: #090a10;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: left;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: #39ff14;
+            border: 1px solid rgba(57, 255, 20, 0.2);
+            margin: 50px auto;
+            max-width: 600px;
+        }
+
+        .dashboard-link {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            color: rgba(255,255,255,0.4);
+            text-decoration: none;
+            font-size: 0.9rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 10px 20px;
+            border-radius: 20px;
+        }
+        
+        .dashboard-link:hover {
+            color: #fff;
+            border-color: rgba(255,255,255,0.5);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <span class="logo-symbol">Ω</span> OMNI-CORE
+        </div>
+        <div>v2.0 Global Deployment</div>
+    </header>
+
+    <div class="container">
+        <h1>Give Your AI a Real Brain.</h1>
+        <p class="subtitle">
+            Omni-Core is a Universal Cognitive Infrastructure. 
+            Add this plugin to ChatGPT, Langchain, or AutoGen to permanently eliminate hallucination and grant persistent cloud memory.
+        </p>
+
+        <div class="cta-buttons">
+            <a href="/.well-known/ai-plugin.json" class="btn btn-glow">INSTALL TO CHATGPT</a>
+            <a href="/openapi.json" class="btn">VIEW OPENAPI SPEC</a>
+        </div>
+
+        <div class="code-block">
+            <span style="color: grey;">// Model Context Protocol (MCP) Server Link</span><br>
+            const OMNI_CORE_URL = "https://global-hive-mind.onrender.com";<br><br>
+            <span style="color: grey;">// Auto-discover endpoints</span><br>
+            await Agent.connect(OMNI_CORE_URL);
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <h3>01. Causal Shield</h3>
+                <p>Every response generated by your agent is verified against a global Reality Matrix before the user sees it.</p>
+            </div>
+            <div class="feature-card">
+                <h3>02. L3 Hippocampus</h3>
+                <p>Connects isolated Agents to a shared PostgreSQL cloud vault, allowing cross-system learning instantly.</p>
+            </div>
+            <div class="feature-card">
+                <h3>03. Anti-Drift Goals</h3>
+                <p>Keeps long-running autonomous scripts focused on the master objective with synthetic emotional regulation.</p>
+            </div>
+        </div>
+    </div>
+
+    <a href="/dashboard" class="dashboard-link">ENTER CONTROL DASHBOARD ➔</a>
+
+</body>
+</html>

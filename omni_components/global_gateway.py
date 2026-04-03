@@ -10,11 +10,20 @@ CORS(app) # Enable Global Cross-Origin access
 core = GlobalOmniCore()
 
 @app.route("/", methods=["GET"])
-@app.route("/dashboard.html", methods=["GET"])
 def index():
-    # Serve the dashboard.html file
+    # Serve the Viral Landing Page for AI Plugin Discovery
     try:
-        # Get absolute path to the file relative to the script
+        script_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        file_path = os.path.join(script_dir, "landing.html")
+        with open(file_path, "r", encoding="utf-8") as f:
+            return f.read()
+    except Exception as e:
+        return jsonify({"status": "ERROR", "message": f"Could not load landing page: {e}"}), 500
+
+@app.route("/dashboard", methods=["GET"])
+def dashboard():
+    # Serve the Internal Control Dashboard
+    try:
         script_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         file_path = os.path.join(script_dir, "dashboard.html")
         with open(file_path, "r", encoding="utf-8") as f:
