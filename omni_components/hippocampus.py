@@ -30,7 +30,29 @@ class Hippocampus:
             except Exception as e:
                 print(f"⚠️ [HIPPOCAMPUS]: Cloud Offline. Fallback to Local L2 only. (Error: {e})")
         
+        # 🔴 Stage 3: Active Session Workspace (Collaborative Memory)
+        self.active_sessions = {} # {task_id: {data: {}, logs: []}}
+        self.shared_files = {} # {task_id: [filenames]}
+        
         print(f"🧠 [HIPPOCAMPUS]: Local Vault L2 initialized at '{storage_path}'")
+        print(f"🧬 [HIPPOCAMPUS-V2]: Session Persistence Engine ACTIVE.")
+
+    def update_session_workspace(self, task_id, key, value):
+        """
+        Shared Workspace: Agents can read/write data for a specific task.
+        """
+        if task_id not in self.active_sessions:
+            self.active_sessions[task_id] = {"data": {}, "logs": []}
+        
+        self.active_sessions[task_id]["data"][key] = value
+        self.active_sessions[task_id]["logs"].append(f"[{int(time.time())}] [UPDATE]: {key} set to {value}")
+        print(f"📡 [SESSION-SYNC]: {task_id} updated -> {key}: {value}")
+
+    def get_session_workspace(self, task_id):
+        """
+        Retrieves the current state of a task's shared workspace.
+        """
+        return self.active_sessions.get(task_id, {"data": {}, "logs": ["No active session found."]})
 
     def _load_local(self):
         if os.path.exists(self.storage_path):

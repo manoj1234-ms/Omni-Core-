@@ -6,11 +6,15 @@ try:
     from omni_components.limbic_system import LimbicSystem
     from omni_components.causal_validator import CausalValidator
     from omni_components.goal_tree import GoalTree
+    from omni_components.planner_engine import PlannerEngine
+    from omni_components.router_engine import RouterEngine
 except ModuleNotFoundError:
     from hippocampus import Hippocampus
     from limbic_system import LimbicSystem
     from causal_validator import CausalValidator
     from goal_tree import GoalTree
+    from planner_engine import PlannerEngine
+    from router_engine import RouterEngine
 
 class GlobalOmniCore:
     """
@@ -28,16 +32,33 @@ class GlobalOmniCore:
         # Thread-safe agent tracking
         self.active_agents = {}
         self.lock = threading.Lock()
+        
+        # v2: Cognitive Cortex Engines (The Brain)
+        self.planner = PlannerEngine()
+        self.router = RouterEngine(self.active_agents) # Registry pointer
         print("\n🌍 [GLOBAL CORE]: System initialized. Awaiting World-AI connections...")
 
-    def attach_agent(self, agent_id, agent_type="general"):
+    def attach_agent(self, agent_id, manifest=None):
+        """
+        Registry v2: Agents now provide a Manifest (Capabilities and Roles).
+        """
         with self.lock:
+            # Handle Legacy String-based agent_types
+            if isinstance(manifest, str) or manifest is None:
+                manifest = {
+                    "role": manifest if manifest else "general",
+                    "capabilities": ["basic_reasoning"],
+                    "trust_score": 0.5
+                }
+            
             self.active_agents[agent_id] = {
-                "type": agent_type,
+                "role": manifest.get("role", "general"),
+                "capabilities": manifest.get("capabilities", []),
+                "trust_score": manifest.get("trust_score", 0.5),
                 "attached_time": time.time(),
                 "shared_knowledge_count": 0
             }
-        print(f"🔗 [GLOBAL CORE]: Agent '{agent_id}' ({agent_type}) ATTACHED to the Universal Hive.")
+        print(f"🔗 [HIVE-REGISTRY]: Agent '{agent_id}' ({manifest['role']}) ATTACHED with capabilities: {manifest['capabilities']}")
 
     def process_global_task(self, agent_id, task_description, proposed_action):
         """
@@ -75,26 +96,22 @@ class GlobalOmniCore:
             self.limbic.update_state(1.0) # High cortisol for global logic error
             return {"status": "WARNING", "message": "Possible Hallucination. Logic does not match Global Reality Matrix."}
 
-# --- SIMULATING THE GLOBAL WORLD AI SYNTHESIS ---
-if __name__ == "__main__":
-    core = GlobalOmniCore()
-
-    # Agent 1: Medical Assistant AI in India
-    core.attach_agent("MEDICAL_AI_01", "Medical")
-    
-    # Agent 2: Autonomous Transport AI in Germany
-    core.attach_agent("DRONE_TRANSPORT_01", "Logistics")
-
-    # 🧬 Scenario: Medical AI learns something and then Drone AI uses that logic
-    print("\n" + "="*52)
-    print("STEP 1: MEDICAL AI SYNTHESIZES A NEW VERIFIED FACT")
-    core.process_global_task("MEDICAL_AI_01", "Verifying patient data logic.", "AI needs causal logic")
-
-    print("\n" + "="*52)
-    print("STEP 2: DRONE AI ATTEMPTS TO PERFORM AN OUT-OF-SCOPE TASK")
-    # Goal Tree will reject this 'cute cat' drift for health/safety core
-    core.process_global_task("DRONE_TRANSPORT_01", "Searching for viral entertainment.", "Find cat videos")
-
-    print("\n" + "="*52)
-    print("STEP 3: DRONE AI USES THE SHARED COLLECTIVE MEMORY")
-    core.process_global_task("DRONE_TRANSPORT_01", "Optimizing logic for pathfinding.", "AI needs causal logic")
+    def orchestrate_complex_task(self, main_task):
+        """
+        Orchestration Logic: Planner Decomposes -> Router Distributes.
+        """
+        print(f"\n🧠 [HIVE-ORCHESTRATOR]: Planning for: '{main_task}'")
+        
+        # 1. PLAN (Decompose)
+        task_graph = self.planner.decompose_task(main_task)
+        
+        # 2. ROUTE (Assign)
+        assignments = self.router.route_task_graph(task_graph)
+        
+        print(f"🚀 [ORCHESTRATION COMPLETE]: Task '{main_task}' has been distributed among the Hive Swarm.")
+        return {
+            "status": "ORCHESTRATED",
+            "task_graph": task_graph,
+            "assignments": assignments,
+            "agent_count": len(task_graph)
+        }

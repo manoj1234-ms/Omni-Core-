@@ -1,4 +1,5 @@
 import os
+import time
 from flask import Flask, request, jsonify, redirect, make_response
 from flask_cors import CORS
 try:
@@ -53,10 +54,28 @@ def health_check():
 @app.route("/attach", methods=["POST"])
 def attach_agent():
     if request.headers.get("X-Omni-Key") != OMNI_KEY:
+        return jsonify({"status": "UNAUTHORIZED", "message": "Omni-Shield Active."}), 401
+    data = request.json
+    agent_id = data.get("agent_id")
+    # v2: Supports direct manifest or legacy agent_type
+    manifest = data.get("manifest", data.get("agent_type", "general"))
+    core.attach_agent(agent_id, manifest)
+    return jsonify({"status": "CONNECTED"})
+
+@app.route("/agents/register", methods=["POST"])
+def register_v2():
+    """V2: Capability-Based Registration"""
+    if request.headers.get("X-Omni-Key") != OMNI_KEY:
         return jsonify({"status": "UNAUTHORIZED"}), 401
     data = request.json
-    core.attach_agent(data.get("agent_id"), data.get("agent_type", "general"))
-    return jsonify({"status": "CONNECTED"})
+    agent_id = data.get("agent_id")
+    manifest = {
+        "role": data.get("role", "general"),
+        "capabilities": data.get("capabilities", []),
+        "trust_score": data.get("trust_score", 0.5)
+    }
+    core.attach_agent(agent_id, manifest)
+    return jsonify({"status": "REGISTERED", "capabilities": manifest["capabilities"]})
 
 @app.route("/think", methods=["POST"])
 def validate_thought():
@@ -65,6 +84,43 @@ def validate_thought():
     data = request.json
     result = core.process_global_task(data.get("agent_id"), data.get("task"), data.get("action"))
     return jsonify(result)
+
+@app.route("/tasks/create", methods=["POST"])
+def create_task_v2():
+    """Stage 2: Active Task Orchestration"""
+    if request.headers.get("X-Omni-Key") != OMNI_KEY:
+        return jsonify({"status": "UNAUTHORIZED"}), 401
+    data = request.json
+    main_task = data.get("task", "General Task")
+    
+    # Trigger the Brain (Planner + Router)
+    result = core.orchestrate_complex_task(main_task)
+    return jsonify(result)
+
+@app.route("/hippocampus", methods=["GET"])
+def query_memory():
+    query = request.args.get("q", "general")
+    memories = core.hippocampus.retrieve_relevant_context(query)
+    return jsonify({"query": query, "collective_context": memories})
+
+@app.route("/memory/session/update", methods=["POST"])
+def update_session():
+    """Stage 3: Collaborative Workspace Update"""
+    if request.headers.get("X-Omni-Key") != OMNI_KEY:
+        return jsonify({"status": "UNAUTHORIZED"}), 401
+    data = request.json
+    task_id = data.get("task_id")
+    key = data.get("key")
+    value = data.get("value")
+    core.hippocampus.update_session_workspace(task_id, key, value)
+    return jsonify({"status": "SUCCESS", "task_id": task_id})
+
+@app.route("/memory/session/query", methods=["GET"])
+def get_session():
+    """Stage 3: Collaborative Workspace Retrieval"""
+    task_id = request.args.get("task_id")
+    state = core.hippocampus.get_session_workspace(task_id)
+    return jsonify(state)
 
 @app.route("/execute", methods=["POST"])
 def execute_system():
