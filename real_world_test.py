@@ -3,7 +3,7 @@ import json
 import time
 
 # --- OMNI-CORE REAL WORLD TEST (MVP V1.1) ---
-HUB_URL = "http://127.0.0.1:5112"
+HUB_URL = "https://global-hive-mind.onrender.com"
 OMNI_KEY = "OMNI-MASTER-2026"
 
 def handshake(agent_id, capabilities):
