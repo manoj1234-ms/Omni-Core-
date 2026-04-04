@@ -83,7 +83,7 @@ class GlobalOmniCore:
         if "System" in task_description or "Execute" in task_description:
             category = "system-control"
             
-        is_grounded, truth_score = self.validator.verify_span(category, proposed_action)
+        is_grounded, truth_score, shared_context = self.validator.verify_span(category, proposed_action)
         print(f"🔍 [VALIDATOR DEBUG]: Category='{category}', Grounded={is_grounded}, Score={truth_score}")
         
         if is_grounded:
@@ -91,7 +91,7 @@ class GlobalOmniCore:
             print(f"🎓 [CENTRAL LEARNING]: Omni-Core has learned a new verified fact from '{agent_id}': {proposed_action}")
             self.hippocampus.add_memory("verified_world_logic", proposed_action)
             self.limbic.update_state(9.0) # High dopamine for successful world-synthesis
-            return {"status": "SUCCESS", "message": "Grounded and Aligned. Collective status updated."}
+            return {"status": "SUCCESS", "message": "Grounded and Aligned. Collective status updated.", "context": shared_context}
         else:
             self.limbic.update_state(1.0) # High cortisol for global logic error
             return {"status": "WARNING", "message": "Possible Hallucination. Logic does not match Global Reality Matrix."}

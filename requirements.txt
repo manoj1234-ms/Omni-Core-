@@ -1,10 +1,10 @@
-flask
+fastapi
+uvicorn
+pyjwt
 requests
 numpy
-gunicorn
-flask-cors
 supabase
 psycopg2-binary
 python-dotenv
 duckduckgo-search
-PyJWT
+python-multipart
