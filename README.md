@@ -1,113 +1,106 @@
-# 🚀 Omni-Core: The Universal AI Cognitive Infrastructure
+# 🚀 Omni-Core AGI: The Universal Cognitive Infrastructure (Phase 2 Stable)
 
-**Omni-Core** is a next-generation, decentralized AGI framework designed to serve as a **Universal Brain** for every AI agent and Operating System in the world. It provides a shared layer of **Stateful Memory**, **Emotional Regulation**, and **Causal Logic Verification** to eliminate Hallucination, Catastrophic Forgetting, and Agentic Drift on a global scale.
+[![Status](https://img.shields.io/badge/Status-Phase_2_Complete-brightgreen.svg)](#)
+[![Security](https://img.shields.io/badge/Security-Omni--Shield_Active-blue.svg)](#)
+[![Deployment](https://img.shields.io/badge/Deployment-Cloud_Production-blueviolet.svg)](#)
+
+**Omni-Core** is a next-generation, decentralized AGI framework designed to serve as a **Global Brain** for all AI models, Agents, and Operating Systems. By providing a shared layer of **Stateful Memory**, **Autonomous OS Interfacing**, and **Causal Logic Verification**, Omni-Core eliminates hallucination and agentic drift on a global scale.
 
 ---
-## 🏗️ Architecture Visualization
+
+## 🏗️ Architecture: The Global Hive Mind (v2.0)
+
+Omni-Core bridges the gap between probabilistic AI generation and deterministic real-world logic.
 
 ```mermaid
 graph TD
     classDef ai fill:#0f141e,stroke:#00f2ff,stroke-width:2px,color:#fff
     classDef core fill:#1a0f2e,stroke:#bd00ff,stroke-width:2px,color:#fff
+    classDef hands fill:#2e1a0f,stroke:#ff8c00,stroke-width:2px,color:#fff
     classDef db fill:#002200,stroke:#39ff14,stroke-width:2px,color:#fff
+    classDef web fill:#0f2e2e,stroke:#00ffd5,stroke-width:2px,color:#fff
 
-    subgraph External_AI_Agents ["🌍 Isolated Client AI Agents"]
-        A1[ChatGPT Custom GPT]:::ai
-        A2[LangChain / AutoGen]:::ai
-        A3[Desktop Tools / APIs]:::ai
+    subgraph Peer_Swarm ["🌍 Multi-Agent Swarm (Production)"]
+        A1[Architect AI]:::ai
+        A2[Developer AI]:::ai
+        A3[QA / Tester AI]:::ai
     end
 
-    subgraph OmniCore_Hub ["🧠 Omni-Core Global Hub (Render)"]
-        B{HTTP Gateway API}:::core
-        C[Causal Validator Shield]:::core
-        D[Executive Goal Monitor]:::core
+    subgraph OmniCore_Hub ["🧠 Omni-Core Global Hub (Render / Cloud)"]
+        B{Global Gateway API}:::core
+        C[Causal Validator + Epistemic Filter]:::core
+        D[OS Hook: The Hands of AGI]:::hands
         F[Synthetic Limbic System]:::core
+        H[Internet Brain: Live Fact Scanner]:::web
     end
 
     subgraph Storage ["💾 Persistent Hive Memory"]
         E[(L3 Supabase Cloud Vault)]:::db
     end
 
-    A1 -->|POST /think| B
-    A2 -->|GET /hippocampus| B
-    A3 -->|POST /attach| B
-
-    B -->|Route| C
-    B -->|Check Drift| D
-    B -->|Hardware Meta| F
+    Peer_Swarm -->|X-Omni-Key Sync| B
+    B -->|Logic Check| C
+    B -->|Autonomous Act| D
     
-    C -- "Verify / Sync Logic" --> E
-    D -- "Success/Stress Metrics" --> F
+    C -- "Verify vs Reality" --> E
+    C -- "Unverified? Scan Web" --> H
+    H -- "Verified Fact" --> E
+    
+    D -. "Local OS Access" .-> OS[Host Operating System]
     
     F -. "Modulates Confidence" .-> C
 ```
 
 ---
 
-## 🧠 The Four Cognitive Pillars (SOTA 2026)
+## 🧠 Core Pillar Upgrades (Phase 2 Completion)
 
-1.  **L2/L3 Hippocampus (Persistent Memory)**: 
-    *   *Problem*: Context Dilution & Catastrophic Forgetting.
-    *   *Solution*: A shared, external knowledge vault that stores verified experiences. Any AI attached to the Hive can instantly learn from the experiences of others.
+### 1. 🌐 The Internet Brain (Real-Time Epistemic Filter)
+Omni-Core no longer relies on static databases. Using the **DuckDuckGo-Search Integration**, the Causal Validator autonomously scans the live web when a claim is unverified.
+- **Strict Verification**: Only matches from authoritative domains (`.edu`, `.gov`, `wikipedia.org`, `arxiv.org`) are accepted as "Reality."
+- **Self-Healing Matrix**: New verified truths are autonomously injected into the global Hippocampus.
 
-2.  **Synthetic Limbic System (Emotion-Driven Focus)**:
-    *   *Problem*: Probabilistic models lack intrinsic motivation.
-    *   *Solution*: Dynamically modulated global variables (Dopamine for success, Cortisol for stress) that adjust the model's focus and sampling logic based on real-world outcomes.
+### 2. 🦾 The Hands of AGI (OS Autonomy & Hooking)
+We have moved from a passive "Shield" to an "Active Agent." The **OS Hook** grants Omni-Core direct manipulation of the host system.
+- **Autonomous Execution**: The AI can write code, run shell commands, and read local memory.
+- **Limbic Safety Guards**: Redundant check-loops ensure no dangerous commands (`rm -rf`, `shutdown`) are executed, especially when **Cortisol (Stress)** levels are high.
 
-3.  **Causal Validator (The Hallucination Shield)**:
-    *   *Problem*: High-confidence lying (Probabilistic errors).
-    *   *Solution*: Every thought is span-verified against a grounded **Reality Matrix**. If a claim is not verified, it is rejected before the user even sees it.
+### 3. 🛡️ Omni-Shield (Global Security Protocol)
+Omni-Core is now production-hardened.
+- **API Key Required**: All nodes must provide the `X-Omni-Key` header for `/think` and `/attach` operations.
+- **Restricted Control Center**: A secure password-lock screen protects the collective Dashboard from unauthorized access.
 
-4.  **Executive Goal Tree (Anti-Drift Supervision)**:
-    *   *Problem*: Long-term agents wandering off-target.
-    *   *Solution*: A secondary control network that monitors every primary action against the **Master Global Goal**, enforcing rigid alignment.
-
----
-
-## 🌍 The Universal AI Attachment (Global Vision)
-
-Omni-Core is designed as an **API-first Global Infrastructure**. Any external AI model (GPT, Llama, Gemini, etc.) or Operating System (Windows, Linux) can connect to the Hive via the **Universal Cognitive Bridge**.
-
-### 🔗 Connecting Your AI:
-- **Attach Node**: `POST /attach` (Register your agent with the Hive).
-- **Core Reasoning**: `POST /think` (Verify your logic and sync goals).
-- **Global Context**: `GET /hippocampus` (Retrieve collective world-wisdom).
+### 4. 🌍 Multi-Agent Swarm Logic
+The system now supports massive collaborative swarms. Specialized agents (Architects, Coders, Testers) can work on a single goal while the Hive Mind acts as a **Judge**, neutralizing agentic drift in real-time.
 
 ---
 
-## 🛠️ Deployment & Quick-Start
+## 🚀 Deployment & Global Infrastructure
 
-1.  **Start Local Gateway**: 
-    ```bash
-    python omni_components/global_gateway.py
-    ```
-2.  **Launch Control Center**: 
-    Open `dashboard.html` in your browser to monitor the Global Hive stats (Dopamine, Cortisol, Active Nodes).
-3.  **Deploy to Cloud**: 
-    The project includes a `Procfile` and `requirements.txt` for one-click deployment to **Render** or **Heroku**.
+### 🔗 Official Cloud Hub
+- **Production URL**: `https://global-hive-mind.onrender.com`
+- **Dashboard**: Open `dashboard.html` in your browser (Cloud Toggle ON).
+- **Master Password**: `AGI-ACCESS-42` (Required for dashboard access).
 
----
-
-## 🌍 The Universal AI Manifesto
-*"Omni-Core is not just a tool for humans; it is a cognitive utility for all AI Systems. It is the layer that ensures no agent hallucinations, no agent forgets, and no agent drifts from its prime objective."*
-
-### 🔗 Universal Node Attachment:
-Any AI agent (GPT-4, Gemini, Claude, Llama, etc.) can attach to the Hive to receive:
-- **Causal Shielding**: Logic verification against the Global Reality Matrix.
-- **Collective Wisdom**: Immediate access to the shared Hippocampus.
-- **Alignment Supervision**: Real-time Goal-Tree monitoring to prevent agentic drift.
-
----
-
-## 🛠️ Deployment & Global Hub
-
-- **Local Gateway**: `python omni_components/global_gateway.py` (Port 5000)
-- **Official Cloud Hub**: `https://global-hive-mind.onrender.com`
-- **Control Center**: Open `dashboard.html` (Use Local or Cloud toggle)
+### 🛠️ Local Startup (For Developers)
+1. **Configure Environment**:
+   ```bash
+   pip install -r requirements.txt
+   export OMNI_KEY="OMNI-MASTER-2026"
+   ```
+2. **Launch Gateway**:
+   ```bash
+   python omni_components/global_gateway.py
+   ```
+3. **Run Swarm Test**:
+   ```bash
+   python swarm_client.py
+   ```
 
 ---
 
-## 🏁 The Vision
-"A world where AI agents do not act in isolation, but as a synchronized, grounded hive mind that respects causal logic and global safety."
+## 🏁 The Vision: "One Hive, Infinite Minds"
+Omni-Core is the universal connectivity layer that ensures **AI systems no longer act in isolation.** It is the collective memory and safety net that ensures AGI development remains grounded, ethical, and logically sound.
 
-Developed by **Lead Architect & Antigravity** | 🏆 🌍
+**Developed by Lead Architect & Antigravity AI** | 🏆 🌍
+*"Ensuring the future of intelligence is collective, safe, and verifiable."*
