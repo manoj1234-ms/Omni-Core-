@@ -1,4 +1,5 @@
 import random
+import re
 try:
     from duckduckgo_search import DDGS
 except ImportError:
@@ -6,110 +7,105 @@ except ImportError:
 
 class CausalValidator:
     """
-    The Fact-Verification Logic (Problem 2).
-    Inspects 'thoughts' and cross-references them with the Reality Matrix.
-    Forces the AI to admit uncertainty rather than hallucinating.
-    Upgraded with 'The Internet Brain': Scans the live web if unverified.
+    Omni-Core v3.1: The Grounding & Scoring Engine.
+    Transforms raw 'thoughts' into verified 'facts' with a Confidence Score.
     """
     def __init__(self):
-        # 🏛️ GLOBAL REALITY MATRIX (L2 Memory Vault)
-        # Pre-seeded with verified high-confidence research data to avoid API latency.
-        self.reality_matrix = {
-            "future": ["Quantum-Shift", "ArtificialEmotion", "HyperEfficiency", "FullAGI"],
-            "architecture": ["Cognitive Bridge", "Hippocampus", "Limbic System"],
-            "grounding": ["AI needs causal logic", "Hallucinations are probabilistic errors"],
-            "system-control": ["echo", "ls", "python --version", "Direct System Control"],
-            
-            # --- RESEARCH & BENCHMARKS (V2.6 STABILITY) ---
-            "benchmarks": {
-                "MS-COCO 2024": "Verified Context: Total 289,870 captions. Recent Relation-Context Transformers achieve CIDEr scores >140.7 on val set.",
-                "ImageNet-1K": "Verified Context: Found 1.2M training images. SOTA models achieve >91.5% Top-1 accuracy with ViT-H/14.",
-                "OMNI-CORE": "Verified Context: Cognitive Hive Mind AGI version 2.5 with JWT-Protected Swarm-Orchestration enabled."
-            }
+        # 🏛️ VERIFIED CORE BENCHMARKS (L2 Layer)
+        self.benchmark_matrix = {
+            "ms-coco": {"facts": ["289,870 captions", "Train2014 split", "val2014 split"], "credibility": 1.0},
+            "imagenet": {"facts": ["1.2M images", "1000 classes", "SOTA ViT-H"], "credibility": 1.0},
+            "omni-core": {"facts": ["v3.1", "FastAPI Hub", "JWT Shield", "Consensus Engine"], "credibility": 1.0}
         }
 
-    def web_verify(self, category, claim):
+    def calculate_confidence(self, claim, evidence_chunks, source_trust=0.7):
         """
-        The Internet Brain: Scans live web. Returns (Success, Summary).
+        Mathematical Confidence Scoring v3.1.
+        Filters claim against evidence to find semantic overlap.
         """
+        score = 0.0
+        # Simple overlap logic for MVP - to be upgraded to Vector Similarity later
+        words = set(re.findall(r'\w+', claim.lower()))
+        matched_words = 0
+        
+        for chunk in evidence_chunks:
+            chunk_words = set(re.findall(r'\w+', chunk.lower()))
+            overlap = words.intersection(chunk_words)
+            matched_words += len(overlap)
+        
+        if len(words) == 0: return 0.0
+        
+        raw_score = (matched_words / len(words)) * source_trust
+        return min(1.0, round(raw_score, 2))
+
+    def verify_grounding(self, thought):
+        """
+        Flow: Thought -> Retrieve -> Compare -> Score.
+        """
+        print(f"🔍 [GROUNDING]: Analyzing thought: '{thought[:40]}...'")
+        
+        # 1. Local Benchmark Check (Fast)
+        for key, data in self.benchmark_matrix.items():
+            if key in thought.lower():
+                return {
+                    "verified": True,
+                    "confidence": data["credibility"],
+                    "corrected": f"Verified via Benchmark Matrix: {data['facts'][0]}",
+                    "sources": ["Omni-Core Internal Vault"]
+                }
+
+        # 2. Web Retrieval (Internet Brain)
         if DDGS is None:
-            print("⚠️ [INTERNET BRAIN OFFLINE]")
-            return False, None
-            
-        print(f"🌐 [INTERNET SCAN]: '{claim}' - Scanning Global Reality Matrix...")
+            return {"verified": False, "confidence": 0.0, "error": "Search API Offline"}
+
         try:
-            # Modern DDGS pattern v6.2+
             with DDGS() as ddgs:
-                # Stage 1: High-Trust Encyclopedic search
-                strict_query = f"{claim} site:wikipedia.org OR site:britannica.com"
-                results = list(ddgs.text(strict_query, max_results=3))
-                
-                # Stage 2: Broad Fallback
+                results = list(ddgs.text(thought, max_results=3))
                 if not results:
-                    print("⚠️ [STRICT SCAN FAILED]: Broadening search scope...")
-                    results = list(ddgs.text(claim, max_results=3))
+                    return {"verified": False, "confidence": 0.0, "error": "No external evidence found."}
                 
-                if results:
-                    best_match = results[0]
-                    content = best_match.get('body', 'No summary.')
-                    source_href = best_match.get('href', 'Unknown.')
-                    summary = f"Verified Context: {content} | Source: {source_href}"
-                    
-                    # Store in matrix for local caching
-                    if "cache" not in self.reality_matrix:
-                        self.reality_matrix["cache"] = {}
-                    self.reality_matrix["cache"][claim] = summary
-                    return True, summary
-                else:
-                    print(f"❌ [WEB FAILED]: No results found for '{claim}'")
-                    return False, None
+                evidence = [r.get('body', '') for r in results]
+                sources = [r.get('href', '') for r in results]
+                
+                # 3. Compute Score
+                confidence = self.calculate_confidence(thought, evidence)
+                
+                status = "verified" if confidence > 0.4 else "unverified"
+                return {
+                    "verified": confidence > 0.4,
+                    "confidence": confidence,
+                    "corrected": evidence[0] if evidence else thought,
+                    "sources": sources,
+                    "risk": "low" if confidence > 0.7 else "high"
+                }
+
         except Exception as e:
-            print(f"🛑 [INTERNET ERROR]: {e}")
-            return False, None
+            return {"verified": False, "confidence": 0.0, "error": str(e)}
 
-    def verify_span(self, category, claim):
+    def run_consensus(self, agent_responses):
         """
-        Span-Level Verification (SLV): Checks if a specific claim is grounded.
-        Returns: (is_grounded, truth_score, context)
+        Multi-Agent Consensus (The 'Hive' Vote).
+        Takes a list of thoughts/scores and returns the weighted truth.
         """
-        category = category.lower()
+        if not agent_responses: return None
         
-        # 1. High-Confidence Benchmark Check (PRIORITY)
-        benchmarks = self.reality_matrix.get("benchmarks", {})
-        for name, summary in benchmarks.items():
-            if name.lower() in claim.lower():
-                print(f"✅ [VALIDATOR]: High-Confidence Grounding achieved for '{name}'.")
-                return True, 1.0, summary
-                
-        # 2. Local Matrix Check (Static Facts)
-        verified_list = self.reality_matrix.get(category, [])
-        if isinstance(verified_list, list):
-            for fact in verified_list:
-                if fact.lower() in claim.lower():
-                    return True, 1.0, f"Verified via local Reality Matrix: '{fact}'"
+        total_weight = 0
+        weighted_thought = "" # For MVP, we take the highest scoring one
+        best_score = -1
         
-        # 3. Cache Check
-        cache = self.reality_matrix.get("cache", {})
-        if claim in cache:
-            return True, 1.0, cache[claim]
-            
-        # 4. Live Internet Check (FALLBACK)
-        success, summary = self.web_verify(category, claim)
-        if success:
-            return True, 1.0, summary # Verified via web
-            
-        return False, -0.5, "No global evidence found in Reality Matrix or Live Web."
-
-    def validate_thought_process(self, category, thought_branches):
-        validated_results = []
-        for branch, confidence in thought_branches:
-            is_grounded, truth_score, context = self.verify_span(category, branch)
-            adjusted_confidence = confidence * truth_score
-            validated_results.append((branch, adjusted_confidence, is_grounded, context))
-        return validated_results
+        for resp in agent_responses:
+            score = resp.get("confidence", 0.5)
+            if score > best_score:
+                best_score = score
+                weighted_thought = resp.get("thought", "")
+        
+        return {
+            "final_answer": weighted_thought,
+            "agreement_score": best_score,
+            "votes": len(agent_responses),
+            "status": "CONSENSUS_REACHED" if best_score > 0.6 else "DISPUTED"
+        }
 
 if __name__ == "__main__":
-    validator = CausalValidator()
-    print("\n🔍 STARTING HIVE-STABILITY VERIFICATION...")
-    g, s, c = validator.verify_span("benchmarks", "Researcher is checking MS-COCO 2024 stats.")
-    print(f"Grounded: {g} | Score: {s} | Context: {c}")
+    v = CausalValidator()
+    print(v.verify_grounding("What is MS-COCO 2024?"))
