@@ -4,6 +4,8 @@ import time
 
 # --- OMNI-CORE REAL WORLD TEST (MVP V1.1) ---
 HUB_URL = "https://global-hive-mind.onrender.com"
+# PRODUCTION HUB: https://global-hive-mind.onrender.com
+# LOCAL HUB: http://localhost:5112
 OMNI_KEY = "OMNI-MASTER-2026"
 
 def handshake(agent_id, capabilities):

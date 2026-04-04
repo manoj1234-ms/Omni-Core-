@@ -17,7 +17,7 @@ except ImportError:
     from shared_world_logic import GlobalOmniCore
     from os_hook import OSHook
 
-app = FastAPI(title="Omni-Core AGI Hive Hub (v2.5.2 - Search Refined)")
+app = FastAPI(title="Omni-Core AGI Hive Hub (v2.6.1 - GROUNDED LOGIC)")
 
 # --- GLOBAL CORS SETTINGS ---
 app.add_middleware(
