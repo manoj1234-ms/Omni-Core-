@@ -1,5 +1,7 @@
 import os
 import time
+import jwt
+from functools import wraps
 from flask import Flask, request, jsonify, redirect, make_response
 from flask_cors import CORS
 try:
@@ -17,6 +19,24 @@ os_hook = OSHook(core=core)
 # --- OMNI-SHIELD SECURITY PROTOCOL ---
 OMNI_KEY = os.environ.get("OMNI_KEY", "OMNI-MASTER-2026")
 DASHBOARD_PASS = os.environ.get("DASHBOARD_PASS", "AGI-ACCESS-42")
+SECRET_KEY = os.environ.get("SECRET_KEY", "OMNI-SECRET-HIVE-99")
+
+# --- TOKEN SECURITY DECORATOR ---
+def token_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = request.headers.get("Authorization")
+        if not token:
+            return jsonify({"status": "UNAUTHORIZED", "message": "Missing Session Token."}), 401
+        try:
+            # Bearer <token>
+            token = token.split(" ")[1]
+            data = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+            request.agent_id = data['agent_id']
+        except Exception as e:
+            return jsonify({"status": "UNAUTHORIZED", "message": "Invalid or Expired Token."}), 401
+        return f(*args, **kwargs)
+    return decorated
 
 @app.route("/", methods=["GET"])
 def index():
@@ -53,87 +73,66 @@ def health_check():
 
 @app.route("/attach", methods=["POST"])
 def attach_agent():
+    """V2/V4 Login: Returns a JWT Session Token"""
     if request.headers.get("X-Omni-Key") != OMNI_KEY:
         return jsonify({"status": "UNAUTHORIZED", "message": "Omni-Shield Active."}), 401
+    
     data = request.json
     agent_id = data.get("agent_id")
-    # v2: Supports direct manifest or legacy agent_type
     manifest = data.get("manifest", data.get("agent_type", "general"))
+    
     core.attach_agent(agent_id, manifest)
-    return jsonify({"status": "CONNECTED"})
-
-@app.route("/agents/register", methods=["POST"])
-def register_v2():
-    """V2: Capability-Based Registration"""
-    if request.headers.get("X-Omni-Key") != OMNI_KEY:
-        return jsonify({"status": "UNAUTHORIZED"}), 401
-    data = request.json
-    agent_id = data.get("agent_id")
-    manifest = {
-        "role": data.get("role", "general"),
-        "capabilities": data.get("capabilities", []),
-        "trust_score": data.get("trust_score", 0.5)
-    }
-    core.attach_agent(agent_id, manifest)
-    return jsonify({"status": "REGISTERED", "capabilities": manifest["capabilities"]})
+    
+    # Generate JWT Token (Expires in 24 hours)
+    token = jwt.encode({
+        "agent_id": agent_id,
+        "exp": time.time() + 86400
+    }, SECRET_KEY, algorithm="HS256")
+    
+    return jsonify({
+        "status": "CONNECTED", 
+        "token": token
+    })
 
 @app.route("/think", methods=["POST"])
+@token_required
 def validate_thought():
-    if request.headers.get("X-Omni-Key") != OMNI_KEY:
-        return jsonify({"status": "UNAUTHORIZED"}), 401
     data = request.json
-    result = core.process_global_task(data.get("agent_id"), data.get("task"), data.get("action"))
+    result = core.process_global_task(request.agent_id, data.get("task"), data.get("action"))
     return jsonify(result)
 
 @app.route("/tasks/create", methods=["POST"])
+@token_required
 def create_task_v2():
-    """Stage 2: Active Task Orchestration"""
-    if request.headers.get("X-Omni-Key") != OMNI_KEY:
-        return jsonify({"status": "UNAUTHORIZED"}), 401
     data = request.json
     main_task = data.get("task", "General Task")
-    
-    # Trigger the Brain (Planner + Router)
     result = core.orchestrate_complex_task(main_task)
     return jsonify(result)
 
-@app.route("/hippocampus", methods=["GET"])
-def query_memory():
-    query = request.args.get("q", "general")
-    memories = core.hippocampus.retrieve_relevant_context(query)
-    return jsonify({"query": query, "collective_context": memories})
-
 @app.route("/memory/session/update", methods=["POST"])
+@token_required
 def update_session():
-    """Stage 3: Collaborative Workspace Update"""
-    if request.headers.get("X-Omni-Key") != OMNI_KEY:
-        return jsonify({"status": "UNAUTHORIZED"}), 401
     data = request.json
-    task_id = data.get("task_id")
-    key = data.get("key")
-    value = data.get("value")
-    core.hippocampus.update_session_workspace(task_id, key, value)
-    return jsonify({"status": "SUCCESS", "task_id": task_id})
+    core.hippocampus.update_session_workspace(data.get("task_id"), data.get("key"), data.get("value"))
+    return jsonify({"status": "SUCCESS"})
 
 @app.route("/memory/session/query", methods=["GET"])
+@token_required
 def get_session():
-    """Stage 3: Collaborative Workspace Retrieval"""
     task_id = request.args.get("task_id")
     state = core.hippocampus.get_session_workspace(task_id)
     return jsonify(state)
 
 @app.route("/execute", methods=["POST"])
+@token_required
 def execute_system():
-    if request.headers.get("X-Omni-Key") != OMNI_KEY:
-        return jsonify({"status": "UNAUTHORIZED"}), 401
     data = request.json
-    result = os_hook.execute_system_command(data.get("agent_id"), data.get("command"))
+    result = os_hook.execute_system_command(request.agent_id, data.get("command"))
     return jsonify(result)
 
 @app.route("/write", methods=["POST"])
+@token_required
 def write_file():
-    if request.headers.get("X-Omni-Key") != OMNI_KEY:
-        return jsonify({"status": "UNAUTHORIZED"}), 401
     data = request.json
     result = os_hook.write_autonomous_file(data.get("filename"), data.get("content"))
     return jsonify(result)

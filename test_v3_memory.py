@@ -2,7 +2,7 @@ import requests
 import time
 
 # --- OMNI-CORE V2 MEMORY TEST ---
-HUB_URL = "http://127.0.0.1:5000" # Using verify-port from Stage 2
+HUB_URL = "https://global-hive-mind.onrender.com" # Using verify-port from Stage 2
 HEADERS = {"X-Omni-Key": "OMNI-MASTER-2026"}
 TASK_ID = "GLOBAL_DEPLOYMENT_PLAN"
 
