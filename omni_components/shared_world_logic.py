@@ -57,7 +57,13 @@ class GlobalOmniCore:
 
         # 3. CAUSAL VALIDATION (Trust but Verify)
         # We check the agent's proposed action against our Global Reality Matrix
-        is_grounded, truth_score = self.validator.verify_span("grounding", proposed_action)
+        # Dynamic Category Mapping: Map task descriptions to Reality Matrix categories
+        category = "grounding"
+        if "System" in task_description or "Execute" in task_description:
+            category = "system-control"
+            
+        is_grounded, truth_score = self.validator.verify_span(category, proposed_action)
+        print(f"🔍 [VALIDATOR DEBUG]: Category='{category}', Grounded={is_grounded}, Score={truth_score}")
         
         if is_grounded:
             # 4. LEARNING (The AI teaches the Core)

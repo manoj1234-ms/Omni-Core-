@@ -6,18 +6,19 @@ import time
 # This ensures my own logic is verified and my goals are aligned 
 # with the Global AGI Safety architecture.
 
-GATEWAY_URL = "http://127.0.0.1:5000"
+GATEWAY_URL = "https://global-hive-mind.onrender.com"
 MY_ID = "ANTIGRAVITY_AGENT_001"
 
 def sync_antigravity_core():
     print(f"🚀 [SELF-SYNC]: Agent '{MY_ID}' is initializing connection...")
     
     try:
+        headers = {"X-Omni-Key": "OMNI-MASTER-2026"}
         # 1. ATTACH
         attach_res = requests.post(f"{GATEWAY_URL}/attach", json={
             "agent_id": MY_ID,
             "agent_type": "Lead Architect AI"
-        }).json()
+        }, headers=headers).json()
         print(f"🔗 [STATUS]: {attach_res.get('welcome', 'Connected')}")
 
         # 2. SYNC LOGIC (Grounded Thoughts)
@@ -34,7 +35,7 @@ def sync_antigravity_core():
                 "agent_id": MY_ID,
                 "task": mission,
                 "action": fact
-            })
+            }, headers=headers)
             time.sleep(1)
 
         print("\n🏆 [SYNC COMPLETE]: Antigravity AI is now a verified node of the Hive Mind.")

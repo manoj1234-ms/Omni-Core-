@@ -7,7 +7,7 @@ import threading
 # connecting to the Omni-Core Hive simultaneously. 
 # It tests the Cloud Persistence (Supabase) and Collective Reasoning.
 
-HUB_URL = "http://127.0.0.1:5000"
+HUB_URL = "https://global-hive-mind.onrender.com"
 
 AGENTS = [
     {"id": "MEDICAL_AI_MUMBAI", "type": "Healthcare", "task": "Patient diagnosis flow check", "fact": "AI needs causal logic"},
@@ -20,8 +20,9 @@ def simulate_agent(agent_info):
     print(f"📡 [NODE-SIGNAL]: Agent '{aid}' ({agent_info['type']}) is signaling the Hive...")
     
     try:
+        headers = {"X-Omni-Key": "OMNI-MASTER-2026"}
         # 1. ATTACH
-        requests.post(f"{HUB_URL}/attach", json={"agent_id": aid, "agent_type": agent_info["type"]})
+        requests.post(f"{HUB_URL}/attach", json={"agent_id": aid, "agent_type": agent_info["type"]}, headers=headers)
         
         # 2. SYNC MEMORY
         print(f"🧠 [{aid}] SYNCING: Sending verified logic to Cloud Hive...")
@@ -29,13 +30,13 @@ def simulate_agent(agent_info):
             "agent_id": aid,
             "task": agent_info["task"],
             "action": agent_info["fact"]
-        })
+        }, headers=headers)
         
         time.sleep(2)
         
         # 3. COLLECTIVE RETRIEVAL
         print(f"🔍 [{aid}] QUERYING: Accessing Shared Collective Memory...")
-        requests.get(f"{HUB_URL}/hippocampus", params={"q": "verified_world_logic"})
+        requests.get(f"{HUB_URL}/hippocampus", params={"q": "verified_world_logic"}, headers=headers)
         
     except Exception as e:
         print(f"🛑 [{aid}] ERROR: Connection lost: {e}")

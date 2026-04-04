@@ -6,3 +6,4 @@ flask-cors
 supabase
 psycopg2-binary
 python-dotenv
+duckduckgo-search
