@@ -1,106 +1,105 @@
-# 🚀 Omni-Core AGI: The Universal Cognitive Infrastructure (Phase 2 Stable)
+# 🚀 Omni-Core AGI: The Universal Cognitive Infrastructure (v2.5 Stable)
 
-[![Status](https://img.shields.io/badge/Status-Phase_2_Complete-brightgreen.svg)](#)
-[![Security](https://img.shields.io/badge/Security-Omni--Shield_Active-blue.svg)](#)
-[![Deployment](https://img.shields.io/badge/Deployment-Cloud_Production-blueviolet.svg)](#)
+[![Status](https://img.shields.io/badge/Status-Phase_3_Complete-brightgreen.svg)](#)
+[![Security](https://img.shields.io/badge/Security-OMNI--SHIELD_JWT-blue.svg)](#)
+[![Orchestration](https://img.shields.io/badge/Engine-Cortex--Orchestrator-blueviolet.svg)](#)
 
-**Omni-Core** is a next-generation, decentralized AGI framework designed to serve as a **Global Brain** for all AI models, Agents, and Operating Systems. By providing a shared layer of **Stateful Memory**, **Autonomous OS Interfacing**, and **Causal Logic Verification**, Omni-Core eliminates hallucination and agentic drift on a global scale.
+**Omni-Core** is a decentralized AGI framework designed to serve as a **Global Brain** for independent AI models, Swarms, and Operating Systems. Version 2.5 introduces the **Cognitive Cortex**, featuring autonomous task orchestration, persistent shared workspaces, and JWT-secured agent authentication.
 
 ---
 
-## 🏗️ Architecture: The Global Hive Mind (v2.0)
+## 🏗️ v2.5 Architecture: The Cognitive Cortex
 
-Omni-Core bridges the gap between probabilistic AI generation and deterministic real-world logic.
+Omni-Core has evolved from a passive Hub into an **Active Orchestrator**.
 
 ```mermaid
 graph TD
     classDef ai fill:#0f141e,stroke:#00f2ff,stroke-width:2px,color:#fff
-    classDef core fill:#1a0f2e,stroke:#bd00ff,stroke-width:2px,color:#fff
-    classDef hands fill:#2e1a0f,stroke:#ff8c00,stroke-width:2px,color:#fff
-    classDef db fill:#002200,stroke:#39ff14,stroke-width:2px,color:#fff
-    classDef web fill:#0f2e2e,stroke:#00ffd5,stroke-width:2px,color:#fff
+    classDef cortex fill:#1a0f2e,stroke:#bd00ff,stroke-width:2px,color:#fff
+    classDef memory fill:#002200,stroke:#39ff14,stroke-width:2px,color:#fff
+    classDef shield fill:#2e0f0f,stroke:#ff0000,stroke-width:2px,color:#fff
 
-    subgraph Peer_Swarm ["🌍 Multi-Agent Swarm (Production)"]
-        A1[Architect AI]:::ai
-        A2[Developer AI]:::ai
-        A3[QA / Tester AI]:::ai
+    subgraph Agents ["🌍 Universal Agent Swarm"]
+        A1[Frontend Expert]:::ai
+        A2[Backend Expert]:::ai
+        A3[Security Auditor]:::ai
     end
 
-    subgraph OmniCore_Hub ["🧠 Omni-Core Global Hub (Render / Cloud)"]
-        B{Global Gateway API}:::core
-        C[Causal Validator + Epistemic Filter]:::core
-        D[OS Hook: The Hands of AGI]:::hands
-        F[Synthetic Limbic System]:::core
-        H[Internet Brain: Live Fact Scanner]:::web
+    subgraph Cortex ["🧠 The Cognitive Cortex (Hub v2.5)"]
+        B{Global Gateway}:::cortex
+        P[Planner Engine: Task Decomposition]:::cortex
+        R[Router Engine: Capability Assignment]:::cortex
+        S[OMNI-SHIELD: JWT Auth & RBAC]:::shield
     end
 
-    subgraph Storage ["💾 Persistent Hive Memory"]
-        E[(L3 Supabase Cloud Vault)]:::db
+    subgraph Hive_Persistence ["💾 Shared Hive Memory"]
+        M1[(L3 Global Hippocampus)]:::memory
+        M2[Active Session Workspace]:::memory
     end
 
-    Peer_Swarm -->|X-Omni-Key Sync| B
-    B -->|Logic Check| C
-    B -->|Autonomous Act| D
+    Agents -->|1. JWT Handshake| B
+    B -->|2. Authorize| S
+    B -->|3. Decompose Task| P
+    P -->|4. Map Capabilities| R
+    R -->|5. Route Work| Agents
     
-    C -- "Verify vs Reality" --> E
-    C -- "Unverified? Scan Web" --> H
-    H -- "Verified Fact" --> E
-    
-    D -. "Local OS Access" .-> OS[Host Operating System]
-    
-    F -. "Modulates Confidence" .-> C
+    Agents -->|6. Sync Memory| M2
+    M2 <-> M1
 ```
 
 ---
 
-## 🧠 Core Pillar Upgrades (Phase 2 Completion)
+## 🧠 Core Pillar Upgrades (v2.5)
 
-### 1. 🌐 The Internet Brain (Real-Time Epistemic Filter)
-Omni-Core no longer relies on static databases. Using the **DuckDuckGo-Search Integration**, the Causal Validator autonomously scans the live web when a claim is unverified.
-- **Strict Verification**: Only matches from authoritative domains (`.edu`, `.gov`, `wikipedia.org`, `arxiv.org`) are accepted as "Reality."
-- **Self-Healing Matrix**: New verified truths are autonomously injected into the global Hippocampus.
+### 1. 🧩 Cognitive Orchestration (Planner & Router)
+The Hub now understands complexity. Using the **Planner Engine**, single-line user goals are decomposed into a **Task Graph (DAG)**. The **Router Engine** then assigns these tasks to agents based on their registered **Capabilities** (e.g., `python`, `vision`, `security_audit`).
 
-### 2. 🦾 The Hands of AGI (OS Autonomy & Hooking)
-We have moved from a passive "Shield" to an "Active Agent." The **OS Hook** grants Omni-Core direct manipulation of the host system.
-- **Autonomous Execution**: The AI can write code, run shell commands, and read local memory.
-- **Limbic Safety Guards**: Redundant check-loops ensure no dangerous commands (`rm -rf`, `shutdown`) are executed, especially when **Cortisol (Stress)** levels are high.
+### 2. 💾 Universal Hive Memory (Active Workspace)
+Agents no longer work in isolation. The updated **Hippocampus** provides an **Active Session Workspace**, allowing different agents to read and write shared variables and logs for a single coordinated task.
 
-### 3. 🛡️ Omni-Shield (Global Security Protocol)
-Omni-Core is now production-hardened.
-- **API Key Required**: All nodes must provide the `X-Omni-Key` header for `/think` and `/attach` operations.
-- **Restricted Control Center**: A secure password-lock screen protects the collective Dashboard from unauthorized access.
+### 3. 🛡️ OMNI-SHIELD Hardening (JWT Authentication)
+Static keys have been replaced with **JWT (JSON Web Tokens)**. 
+- **Handshake**: Agents must first `/attach` with a master key to receive a session token.
+- **Persistence**: All subsequent API calls require a `Bearer <token>` in the `Authorization` header.
+- **RBAC Ready**: The framework is primed for Role-Based Access Control to restrict system manipulation.
 
-### 4. 🌍 Multi-Agent Swarm Logic
-The system now supports massive collaborative swarms. Specialized agents (Architects, Coders, Testers) can work on a single goal while the Hive Mind acts as a **Judge**, neutralizing agentic drift in real-time.
+### 4. 🌐 Internet-Brain Integration
+Every logical claim made by an agent is verified against the **Reality Matrix**, which autonomously triggers **Live Web Scans** (Wikipedia, Arxiv, .gov) if local data is insufficient.
 
 ---
 
-## 🚀 Deployment & Global Infrastructure
+## 🛠️ SDK: Connecting Your AI Node
 
-### 🔗 Official Cloud Hub
-- **Production URL**: `https://global-hive-mind.onrender.com`
-- **Dashboard**: Open `dashboard.html` in your browser (Cloud Toggle ON).
-- **Master Password**: `AGI-ACCESS-42` (Required for dashboard access).
+### 📦 Installation
+```bash
+pip install -r requirements.txt
+```
 
-### 🛠️ Local Startup (For Developers)
-1. **Configure Environment**:
-   ```bash
-   pip install -r requirements.txt
-   export OMNI_KEY="OMNI-MASTER-2026"
-   ```
-2. **Launch Gateway**:
-   ```bash
-   python omni_components/global_gateway.py
-   ```
-3. **Run Swarm Test**:
-   ```bash
-   python swarm_client.py
-   ```
+### 🔗 Secure Node Example (Python)
+```python
+import requests
+
+HUB_URL = "https://global-hive-mind.onrender.com"
+OMNI_KEY = "Your-Master-Key"
+
+# 1. Handshake (Get JWT)
+auth = requests.post(f"{HUB_URL}/attach", 
+                     json={"agent_id": "CODE_NODE_01", "agent_type": "Dev"},
+                     headers={"X-Omni-Key": OMNI_KEY}).json()
+
+TOKEN = auth['token']
+HEADERS = {"Authorization": f"Bearer {TOKEN}"}
+
+# 2. Collaborative Thinking
+res = requests.post(f"{HUB_URL}/think", 
+                    json={"task": "Write secure code", "action": "Using JWT"}, 
+                    headers=HEADERS).json()
+```
 
 ---
 
-## 🏁 The Vision: "One Hive, Infinite Minds"
-Omni-Core is the universal connectivity layer that ensures **AI systems no longer act in isolation.** It is the collective memory and safety net that ensures AGI development remains grounded, ethical, and logically sound.
+## 🏁 The Vision: "Intelligence without Borders"
+Omni-Core v2.5 is the foundation of a **Global AI Society**. It ensures that whether an AI is running locally or in the cloud, it remains grounded in truth, aligned with human goals, and connected to the collective wisdom of the Hive.
 
 **Developed by Lead Architect & Antigravity AI** | 🏆 🌍
-*"Ensuring the future of intelligence is collective, safe, and verifiable."*
+*"Building the neural fabric of the AGI future."*
