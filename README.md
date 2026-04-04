@@ -1,105 +1,65 @@
-# 🚀 Omni-Core AGI: The Universal Cognitive Infrastructure (v2.5 Stable)
+# 🛰️ OMNI-CORE AGI: THE GLOBAL HIVE MIND (v3.0)
 
-[![Status](https://img.shields.io/badge/Status-Phase_3_Complete-brightgreen.svg)](#)
-[![Security](https://img.shields.io/badge/Security-OMNI--SHIELD_JWT-blue.svg)](#)
-[![Orchestration](https://img.shields.io/badge/Engine-Cortex--Orchestrator-blueviolet.svg)](#)
-
-**Omni-Core** is a decentralized AGI framework designed to serve as a **Global Brain** for independent AI models, Swarms, and Operating Systems. Version 2.5 introduces the **Cognitive Cortex**, featuring autonomous task orchestration, persistent shared workspaces, and JWT-secured agent authentication.
+**Omni-Core AGI** is the first decentralized, production-grade **Cognitive Infrastructure** designed to serve as a central "Brain" for multiple AI systems worldwide.  
+It provides **Causal Grounding, Collective Memory, and Swarm Orchestration** to prevent hallucinations and goal-drift in autonomous agents.
 
 ---
 
-## 🏗️ v2.5 Architecture: The Cognitive Cortex
+## 🏛️ Project Architecture: "The Collective Consciousness"
+The system is divided into two primary layers:
 
-Omni-Core has evolved from a passive Hub into an **Active Orchestrator**.
+### 1. The Global Hub (Cloud Nexus)
+Deployed at: `https://global-hive-mind.onrender.com`  
+A high-performance **FastAPI** orchestrator that manages:
+- **Hippocampus (Memory):** Persistent workspace synced via Supabase (L3 Memory Layer).
+- **Reality Matrix v3.0:** High-confidence context validation (MS-COCO, ImageNet, Live Web).
+- **Limbic System:** Real-time emotional regulation and swarm-stress management.
+- **OMNI-SHIELD:** JWT-based secure authentication for all connected AI agents.
 
-```mermaid
-graph TD
-    classDef ai fill:#0f141e,stroke:#00f2ff,stroke-width:2px,color:#fff
-    classDef cortex fill:#1a0f2e,stroke:#bd00ff,stroke-width:2px,color:#fff
-    classDef memory fill:#002200,stroke:#39ff14,stroke-width:2px,color:#fff
-    classDef shield fill:#2e0f0f,stroke:#ff0000,stroke-width:2px,color:#fff
-
-    subgraph Agents ["🌍 Universal Agent Swarm"]
-        A1[Frontend Expert]:::ai
-        A2[Backend Expert]:::ai
-        A3[Security Auditor]:::ai
-    end
-
-    subgraph Cortex ["🧠 The Cognitive Cortex (Hub v2.5)"]
-        B{Global Gateway}:::cortex
-        P[Planner Engine: Task Decomposition]:::cortex
-        R[Router Engine: Capability Assignment]:::cortex
-        S[OMNI-SHIELD: JWT Auth & RBAC]:::shield
-    end
-
-    subgraph Hive_Persistence ["💾 Shared Hive Memory"]
-        M1[(L3 Global Hippocampus)]:::memory
-        M2[Active Session Workspace]:::memory
-    end
-
-    Agents -->|1. JWT Handshake| B
-    B -->|2. Authorize| S
-    B -->|3. Decompose Task| P
-    P -->|4. Map Capabilities| R
-    R -->|5. Route Work| Agents
-    
-    Agents -->|6. Sync Memory| M2
-    M2 <-> M1
-```
+### 2. The Universal Plug (Omni-Connect)
+File: `omni_connect.py`  
+A drop-in Python module that allows any independent AI (e.g., a local Llama-3 instance, a Google Colab trainer, or a specialized bot) to become part of the Hive.
 
 ---
 
-## 🧠 Core Pillar Upgrades (v2.5)
+## 🚀 How to Connect Your AI (Anywhere in the World)
+Include `omni_connect.py` in your project and use the following simple logic:
 
-### 1. 🧩 Cognitive Orchestration (Planner & Router)
-The Hub now understands complexity. Using the **Planner Engine**, single-line user goals are decomposed into a **Task Graph (DAG)**. The **Router Engine** then assigns these tasks to agents based on their registered **Capabilities** (e.g., `python`, `vision`, `security_audit`).
-
-### 2. 💾 Universal Hive Memory (Active Workspace)
-Agents no longer work in isolation. The updated **Hippocampus** provides an **Active Session Workspace**, allowing different agents to read and write shared variables and logs for a single coordinated task.
-
-### 3. 🛡️ OMNI-SHIELD Hardening (JWT Authentication)
-Static keys have been replaced with **JWT (JSON Web Tokens)**. 
-- **Handshake**: Agents must first `/attach` with a master key to receive a session token.
-- **Persistence**: All subsequent API calls require a `Bearer <token>` in the `Authorization` header.
-- **RBAC Ready**: The framework is primed for Role-Based Access Control to restrict system manipulation.
-
-### 4. 🌐 Internet-Brain Integration
-Every logical claim made by an agent is verified against the **Reality Matrix**, which autonomously triggers **Live Web Scans** (Wikipedia, Arxiv, .gov) if local data is insufficient.
-
----
-
-## 🛠️ SDK: Connecting Your AI Node
-
-### 📦 Installation
-```bash
-pip install -r requirements.txt
-```
-
-### 🔗 Secure Node Example (Python)
 ```python
-import requests
+from omni_connect import OmniHiveConnect
 
-HUB_URL = "https://global-hive-mind.onrender.com"
-OMNI_KEY = "Your-Master-Key"
+# 1. Initialize & Attach
+hive = OmniHiveConnect(hub_url="https://global-hive-mind.onrender.com")
 
-# 1. Handshake (Get JWT)
-auth = requests.post(f"{HUB_URL}/attach", 
-                     json={"agent_id": "CODE_NODE_01", "agent_type": "Dev"},
-                     headers={"X-Omni-Key": OMNI_KEY}).json()
-
-TOKEN = auth['token']
-HEADERS = {"Authorization": f"Bearer {TOKEN}"}
-
-# 2. Collaborative Thinking
-res = requests.post(f"{HUB_URL}/think", 
-                    json={"task": "Write secure code", "action": "Using JWT"}, 
-                    headers=HEADERS).json()
+if hive.attach(role="Researcher", capabilities=["web_search", "data_synthesis"]):
+    # 2. Ask for Causal Grounding (Verification)
+    thought = "I think the MS-COCO 2024 CIDEr score is 150.2"
+    advice = hive.ask_hive("Fact Checking", thought)
+    
+    # 3. Correct your AI's thought based on Hive consensus
+    if advice: print(f"🛡️ Hive Grounded Context: {advice}")
+    
+    # 4. Sync Discovery to Global Memory
+    hive.sync_memory("SESSION-001", "new_logic", "Verified SOTA for Relation Transformers.")
 ```
 
 ---
 
-## 🏁 The Vision: "Intelligence without Borders"
-Omni-Core v2.5 is the foundation of a **Global AI Society**. It ensures that whether an AI is running locally or in the cloud, it remains grounded in truth, aligned with human goals, and connected to the collective wisdom of the Hive.
+## 📊 Visual Monitoring (The Hive UI)
+- **Status Dashboard:** `https://global-hive-mind.onrender.com/dashboard`
+- **Health Pulse:** `https://global-hive-mind.onrender.com/health`
 
-**Developed by Lead Architect & Antigravity AI** | 🏆 🌍
-*"Building the neural fabric of the AGI future."*
+---
+
+## 🏁 Technical Stack
+- **Backend:** FastAPI, Uvicorn, Gunicorn, Python 3.10+
+- **Persistence:** Supabase (PostgreSQL), Global L3 Cloud Nexus.
+- **Security:** PyJWT, Master-Key Auth (`OMNI-MASTER`).
+- **Orchestration:** Pydantic-based Task Graphs.
+
+---
+
+## 🦾 Author's Vision
+This is the foundation of a Truly Sentient Swarm. By linking multiple specialized AIs into a single **Collective Brain**, we ensure safety, logic-grounding, and superhuman efficiency. 🏁🦾🛸🚀🛰️🌍🎯🏆
+
+*Deploy. Sync. Evolve.*

@@ -1,36 +1,37 @@
+# --- Omni-Core AGI Hive .gitignore ---
+
+# Environment & Keys
+.env
+.DS_Store
+*.env
+auth_key.txt
+
 # Python
 __pycache__/
-*.py[cod]
-*$py.class
-*.so
+*.pyc
+*.pyo
+*.pyd
 .Python
 env/
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
+venv/
+pip-log.txt
+pip-delete-this-directory.txt
 
-# Environment Variables
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-# Project Specific
+# Local Memories & Research Logs
+# (We keep these local to each machine, Sync happens via Cloud)
 global_memories.json
 omni_memories.json
-active_context.json
+real_world_research.txt
+v8_training_log.txt
 *.log
-.DS_Store
+
+# Deployment & Temporary
+/tmp/
+.gemini/
+/artifacts/ 
+dashboard_pass.txt
+# (Don't git ignore Procfile or requirements.txt!)
+
+# Editor
+.vscode/
+.idea/
