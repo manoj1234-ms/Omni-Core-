@@ -40,6 +40,9 @@ agent_heartbeats = {} # {agent_id: timestamp}
 def prune_stale_agents():
     while True:
         now = time.time()
+        # Phase 2: Apply Trust Decay
+        core.apply_trust_decay()
+        
         stale_agents = [aid for aid, ts in agent_heartbeats.items() if (now - ts) > 60]
         for aid in stale_agents:
             if aid in core.active_agents:

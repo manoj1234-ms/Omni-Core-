@@ -21,7 +21,9 @@ pip-delete-this-directory.txt
 # (We keep these local to each machine, Sync happens via Cloud)
 global_memories.json
 omni_memories.json
+*_graph.json
 real_world_research.txt
+test_results.txt
 v8_training_log.txt
 *.log
 
@@ -31,6 +33,11 @@ v8_training_log.txt
 /artifacts/ 
 dashboard_pass.txt
 # (Don't git ignore Procfile or requirements.txt!)
+
+# Developer Tools
+# (Keep for now as part of the repo, but exclude generated content)
+__pycache__/
+*.pyc
 
 # Editor
 .vscode/

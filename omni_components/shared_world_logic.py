@@ -91,10 +91,38 @@ class GlobalOmniCore:
             print(f"🎓 [CENTRAL LEARNING]: Omni-Core has learned a new verified fact from '{agent_id}': {proposed_action}")
             self.hippocampus.add_memory("verified_world_logic", proposed_action)
             self.limbic.update_state(9.0) # High dopamine for successful world-synthesis
+            
+            # Phase 2: Boost Trust Score
+            with self.lock:
+                if agent_id in self.active_agents:
+                    current_trust = self.active_agents[agent_id].get("trust_score", 0.5)
+                    self.active_agents[agent_id]["trust_score"] = min(1.0, current_trust + 0.05)
+                    self.active_agents[agent_id]["last_active"] = time.time()
+            
             return {"status": "SUCCESS", "message": "Grounded and Aligned. Collective status updated.", "context": shared_context}
         else:
             self.limbic.update_state(1.0) # High cortisol for global logic error
+            
+            # Phase 2: Penalize Trust Score
+            with self.lock:
+                if agent_id in self.active_agents:
+                    current_trust = self.active_agents[agent_id].get("trust_score", 0.5)
+                    self.active_agents[agent_id]["trust_score"] = max(0.1, current_trust - 0.1)
+                    self.active_agents[agent_id]["last_active"] = time.time()
+            
             return {"status": "WARNING", "message": "Possible Hallucination. Logic does not match Global Reality Matrix."}
+
+    def apply_trust_decay(self, decay_rate=0.01):
+        """
+        Phase 2: Trust Decay for inactive agents.
+        """
+        now = time.time()
+        with self.lock:
+            for aid, data in self.active_agents.items():
+                last_active = data.get("last_active", data.get("attached_time", now))
+                if (now - last_active) > 300: # 5 minutes of inactivity
+                    data["trust_score"] = max(0.1, data["trust_score"] - decay_rate)
+                    print(f"📉 [TRUST-DECAY]: Agent '{aid}' trust decayed due to inactivity.")
 
     def orchestrate_complex_task(self, main_task):
         """

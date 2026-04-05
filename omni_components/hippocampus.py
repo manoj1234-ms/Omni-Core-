@@ -34,8 +34,11 @@ class Hippocampus:
         self.active_sessions = {} # {task_id: {data: {}, logs: []}}
         self.shared_files = {} # {task_id: [filenames]}
         
+        # 🔗 Phase 3: Cognitive Knowledge Graph
+        self.knowledge_graph = self._load_graph() # {subject: [{relation: X, object: Y}]}
+        
         print(f"🧠 [HIPPOCAMPUS]: Local Vault L2 initialized at '{storage_path}'")
-        print(f"🧬 [HIPPOCAMPUS-V2]: Session Persistence Engine ACTIVE.")
+        print(f"🧬 [HIPPOCAMPUS-V3]: Knowledge Graph Engine ACTIVE.")
 
     def update_session_workspace(self, task_id, key, value):
         """
@@ -60,17 +63,58 @@ class Hippocampus:
                 return json.load(f)
         return {"verified_world_logic": ["Initial collective context active."]}
 
+    def _load_graph(self):
+        graph_path = self.storage_path.replace(".json", "_graph.json")
+        if os.path.exists(graph_path):
+            with open(graph_path, "r") as f:
+                return json.load(f)
+        return {}
+
     def save_local(self):
+        # Save L2 Vault
         with open(self.storage_path, "w") as f:
             json.dump(self.local_store, f, indent=4)
+        
+        # Save Knowledge Graph
+        graph_path = self.storage_path.replace(".json", "_graph.json")
+        with open(graph_path, "w") as f:
+            json.dump(self.knowledge_graph, f, indent=4)
+
+    def add_triplet(self, s, r, o):
+        """
+        Phase 3: Adds a knowledge triplet to the graph.
+        """
+        if s not in self.knowledge_graph:
+            self.knowledge_graph[s] = []
+        
+        triplet = {"relation": r, "object": o, "verified_at": time.time()}
+        if triplet not in self.knowledge_graph[s]:
+            self.knowledge_graph[s].append(triplet)
+            print(f"🕸️ [GRAPH-SYNC]: New edge: {s} --[{r}]--> {o}")
+            self.save_local()
+
+    def query_graph(self, subject):
+        """
+        Phase 3: Retrieves all known relationships for a subject.
+        """
+        return self.knowledge_graph.get(subject, [])
 
     def retrieve_relevant_context(self, query):
         """
-        Retrieves context from both Local L2 (Fast) and Cloud L3 (Supabase).
+        Retrieves context from Local L2, Cloud L3 (Supabase), and Knowledge Graph.
         """
         query = query.lower()
         results = self.local_store.get(query, [])
 
+        # 1. Knowledge Graph Retrieval (Subject-Relation-Object)
+        # Look for the query as a subject in the triplet graph
+        triplets = self.query_graph(query)
+        for t in triplets:
+            rel_fact = f"[RELATION]: {query} --({t['relation']})--> {t['object']}"
+            if rel_fact not in results:
+                results.append(rel_fact)
+
+        # 2. Cloud L3 Retrieval (Supabase)
         if self.supabase:
             try:
                 # Query the 'logic_memories' table in Supabase
@@ -79,7 +123,7 @@ class Hippocampus:
                 for fact in cloud_facts:
                     if fact not in results:
                         results.append(fact)
-                print(f"📡 [GLOBAL-SYNC]: Merged {len(cloud_facts)} facts from Supabase L3.")
+                print(f"📡 [GLOBAL-SYNC]: Merged {len(cloud_facts)} facts + {len(triplets)} triplets.")
             except Exception:
                 pass 
                 
