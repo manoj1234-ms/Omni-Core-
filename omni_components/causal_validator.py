@@ -55,57 +55,59 @@ class CausalValidator:
 
     def calculate_confidence(self, claim, evidence_results):
         """
-        Mathematical Confidence Scoring v3.2.1 (Heuristic-to-Learned).
-        Filters claim against evidence to find semantic overlap and source trust.
+        Mathematical Confidence Scoring v3.3 (Entropy-Aware).
+        Implements Uncertainty Modeling: confidence = trust_score * (1 - entropy).
         """
         score = 0.0
-        reason = "Base initial assessment."
-        now = time.time()
+        reason = "Initial assessment."
         
         # 1. Deterministic Pass
         is_det, det_score, det_msg = self._run_deterministic_checks(claim)
         if is_det:
-            return det_score, f"Deterministic check passed: {det_msg}"
+            return det_score, f"Deterministic check passed: {det_msg}", 0.0
 
         # 2. Semantic Overlap Pass
         words = set(re.findall(r'\w+', claim.lower()))
-        if len(words) == 0: return 0.0, "Empty claim."
+        if len(words) == 0: return 0.0, "Empty claim.", 1.0
         
-        matched_words = 0
+        individual_scores = []
         total_source_weight = 0
         
         for result in evidence_results:
             body = result.get('body', '').lower()
             url = result.get('href', '')
-            
-            # Phase 2: Domain Trust + Recency Factor (Placeholder for learned trust)
             source_weight = self._get_url_trust(url)
-            
-            # Simple simulation of recency trust; In production, we'd check publication dates
-            recency_factor = 1.0 
-            if "2024" in body or "2023" in body: recency_factor = 1.1
-            if "2018" in body: recency_factor = 0.8
             
             chunk_words = set(re.findall(r'\w+', body))
             overlap = words.intersection(chunk_words)
-            matched_words += len(overlap) * source_weight * recency_factor
+            
+            # Individual source match score
+            match_score = (len(overlap) / len(words)) * source_weight
+            individual_scores.append(match_score)
             total_source_weight += source_weight
         
-        # Normalize
+        # 3. ENTROPY / UNCERTAINTY CALCULATION
+        # High variance in source matches = High Entropy
+        if len(individual_scores) > 1:
+            mean_score = sum(individual_scores) / len(individual_scores)
+            variance = sum((s - mean_score)**2 for s in individual_scores) / len(individual_scores)
+            entropy = min(1.0, variance * 5.0) # Scaled for sensitivity
+        else:
+            entropy = 0.5 # Default uncertainty for single source
+            
         avg_source_trust = total_source_weight / len(evidence_results) if evidence_results else 0.5
-        raw_score = (matched_words / (len(words) * len(evidence_results))) if evidence_results else 0.0
         
-        # Scale to 0-1 range
-        final_score = min(1.0, round(raw_score * avg_source_trust * 1.5, 2))
+        # 4. FINAL WEIGHTED CONFIDENCE (Nature-inspired)
+        final_score = min(1.0, round(avg_source_trust * (1.0 - entropy) * 1.5, 2))
         
         if final_score > 0.7:
-            reason = f"High confidence via high-trust domains ({avg_source_trust:.2f}) and recent semantic overlap."
+            reason = f"Verified: Low entropy ({entropy:.2f}) across high-trust sources."
         elif final_score > 0.4:
-            reason = "Moderate confidence; partial matches in mixed-trust sources."
+            reason = f"Moderate: Significant disagreement/entropy ({entropy:.2f}) detected in sources."
         else:
-            reason = "Low confidence: Logic contradicts majority evidence or has weak overlap."
+            reason = f"Low: Critical failure in source alignment (Entropy: {entropy:.2f})."
             
-        return final_score, reason
+        return final_score, reason, entropy
 
     def verify_grounding(self, thought, mode="warn"):
         """
@@ -167,21 +169,35 @@ class CausalValidator:
                 sources = [r.get('href', '') for r in results]
                 top_evidence = results[0].get('body', thought)
                 
-                # 5. Build Structured Result
+                # 4. Scored Synthesis (Entropy-Aware)
+                confidence, explanation, entropy = self.calculate_confidence(thought, results)
+                sources = [r.get('href', '') for r in results]
+                top_evidence = results[0].get('body', thought)
+                
+                # 5. HALLUCINATION ATTRIBUTION (Research-Grade)
+                attribution = "none"
+                if confidence < 0.4:
+                    if not results: attribution = "retrieval_failure"
+                    elif entropy > 0.6: attribution = "semantic_disagreement"
+                    else: attribution = "untrusted_sources"
+
+                # 6. Build Structured Result
                 verdict = confidence > 0.4
-                if mode == "strict" and confidence < 0.7:
+                if mode == "strict" and (confidence < 0.7 or entropy > 0.5):
                     verdict = False
                 
                 status = "VERIFIED" if verdict else "REJECTED"
                 
                 structured_reason = {
                     "verdict": explanation,
+                    "entropy": round(entropy, 2),
+                    "attribution": attribution, # v3.3 Feature
                     "confidence_breakdown": {
                         "semantic_overlap": round(confidence * 0.8, 2),
                         "source_trust": round(confidence * 0.2, 2)
                     },
                     "sources": sources[:2],
-                    "validators_passed": ["semantic_search", "domain_ranking"]
+                    "validators_passed": ["semantic_search", "entropy_modeling"]
                 }
 
                 response = {

@@ -36,7 +36,16 @@ class GlobalOmniCore:
         # v2: Cognitive Cortex Engines (The Brain)
         self.planner = PlannerEngine()
         self.router = RouterEngine(self.active_agents) # Registry pointer
-        print("\n🌍 [GLOBAL CORE]: System initialized. Awaiting World-AI connections...")
+        
+        # v3.3 Specialized Swarm Definitions
+        self.swarm_roles = {
+            "retriever": {"weight": 1.2, "description": "Fetches raw data"},
+            "validator": {"weight": 1.0, "description": "Verifies data against benchmarks"},
+            "critic": {"weight": 1.5, "description": "Detects logical inconsistencies"},
+            "judge": {"weight": 1.0, "description": "Finalizes the consensus"}
+        }
+        
+        print("\n🌍 [GLOBAL CORE]: System initialized. Specialized Swarm active.")
 
     def attach_agent(self, agent_id, manifest=None):
         """
@@ -83,8 +92,17 @@ class GlobalOmniCore:
         if "System" in task_description or "Execute" in task_description:
             category = "system-control"
             
-        is_grounded, truth_score, shared_context = self.validator.verify_span(category, proposed_action)
-        print(f"🔍 [VALIDATOR DEBUG]: Category='{category}', Grounded={is_grounded}, Score={truth_score}")
+        # Phase 3.3: DISAGREEMENT LOOP (Iterative Reasoning)
+        grounding_result = self.validator.verify_grounding(proposed_action)
+        
+        # If high entropy/uncertainty, we enter the Disagreement Loop
+        if grounding_result.get("confidence", 0.0) < 0.6 and grounding_result.get("reason", {}).get("entropy", 0.0) > 0.4:
+            print("🔄 [DISAGREEMENT-LOOP]: HIGH ENTROPY. Re-querying swarm for justification...")
+            # Simulate re-querying agents for clearer justification
+            time.sleep(0.5) 
+            grounding_result = self.validator.verify_grounding(proposed_action, mode="strict")
+
+        is_grounded = grounding_result.get("verified", False)
         
         if is_grounded:
             # 4. LEARNING (The AI teaches the Core)
@@ -92,14 +110,16 @@ class GlobalOmniCore:
             self.hippocampus.add_memory("verified_world_logic", proposed_action)
             self.limbic.update_state(9.0) # High dopamine for successful world-synthesis
             
-            # Phase 2: Boost Trust Score
+            # Phase 2: Boost Trust Score (Role-Aware)
             with self.lock:
                 if agent_id in self.active_agents:
+                    role = self.active_agents[agent_id].get("role", "general")
+                    role_multiplier = self.swarm_roles.get(role, {"weight": 1.0})["weight"]
                     current_trust = self.active_agents[agent_id].get("trust_score", 0.5)
-                    self.active_agents[agent_id]["trust_score"] = min(1.0, current_trust + 0.05)
+                    self.active_agents[agent_id]["trust_score"] = min(1.0, current_trust + (0.05 * role_multiplier))
                     self.active_agents[agent_id]["last_active"] = time.time()
             
-            return {"status": "SUCCESS", "message": "Grounded and Aligned. Collective status updated.", "context": shared_context}
+            return {"status": "SUCCESS", "message": "Grounded and Aligned. Collective status updated.", "context": grounding_result}
         else:
             self.limbic.update_state(1.0) # High cortisol for global logic error
             

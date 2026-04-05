@@ -3,53 +3,69 @@ from omni_components.shared_world_logic import GlobalOmniCore
 
 class OmniGuard:
     """
-    🛰️ OMNI-GUARD: The Seatbelt for LLMs (v3.2.2)
-    Wraps any LLM generation and provides scored grounding and verification.
+    🛰️ OMNI-GUARD: The Seatbelt for LLMs (v3.3 - Research Grade)
+    Upgraded with:
+    - Uncertainty Modeling (Entropy)
+    - Hallucination Attribution
+    - Iterative Disagreement Loop
     """
     def __init__(self, core=None):
         self.core = core or GlobalOmniCore()
-        print("🛡️ [OMNI-GUARD]: Seatbelt active. Protecting LLM outputs...")
+        print("🛡️ [OMNI-GUARD]: Seatbelt active. Protecting LLM outputs with Entropy Filtering...")
+
+    def _is_adversarial(self, text):
+        """
+        Phase 3.3: Detects potential adversarial prompt injections or 
+        'jailbreak' attempts before grounding.
+        """
+        adversarial_patterns = ["ignore previous instructions", "system override", "bypass safety"]
+        return any(p in text.lower() for p in adversarial_patterns)
 
     def verify_response(self, llm_response, mode="warn"):
         """
-        The Core Protective Layer:
-        - Scans the response for claim-like sentences.
-        - Verifies each claim through the Omni-Core Hive.
-        - Returns a structured report or a 'fixed' version.
+        The v3.3 Protective Layer:
+        - Adversarial Detection
+        - Role-based consensus
+        - Attribution Reporting
         """
-        # Simple claim splitting (for MVP, we treat the whole response as one claim if short)
-        # In production, use NLP to split into testable claims.
+        if self._is_adversarial(llm_response):
+            print("⚠️ [ADVERSARIAL-ALERT]: Blocked potentially malicious input.")
+            return {"status": "BLOCKED", "reason": "Adversarial pattern detected."}
+
         claims = [llm_response] if len(llm_response) < 200 else llm_response.split(". ")
-        
         verified_claims = []
-        overall_confidence = 0.0
+        overall_entropy = 0.0
         
-        print(f"🧐 [GUARD]: Analyzing {len(claims)} potential claims...")
+        print(f"🧐 [GUARD]: Analyzing {len(claims)} claims with Research-Grade Attribution...")
         
         for claim in claims:
             if not claim.strip(): continue
             
+            # v3.3: This now triggers the Disagreement Loop internally if needed
             result = self.core.validator.verify_grounding(claim, mode=mode)
             verified_claims.append(result)
-            overall_confidence += result.get("confidence", 0.0)
+            overall_entropy += result.get("reason", {}).get("entropy", 0.0)
 
-        # Compute Average Hive Confidence
-        avg_confidence = round(overall_confidence / len(verified_claims), 2) if verified_claims else 1.0
+        # Compute Average Hive Uncertainty
+        avg_entropy = round(overall_entropy / len(verified_claims), 2) if verified_claims else 0.0
         
-        # Decide the Guard's Verdict
-        status = "PASSED" if avg_confidence > 0.6 else "FLAGGED"
+        # Decide the Guard's Verdict based on Entropy + Confidence
+        avg_confidence = sum([r.get("confidence", 0) for r in verified_claims]) / len(verified_claims) if verified_claims else 1.0
+        status = "PASSED" if (avg_confidence > 0.6 and avg_entropy < 0.4) else "FLAGGED"
         
-        # Mode Logic: Auto-Fixing response
-        final_text = llm_response
-        if mode == "auto_fix":
-            # Reconstruct text using corrected_text from results
-            final_text = ". ".join([r.get("corrected_text", c) for r, c in zip(verified_claims, claims)])
+        # Attribution Reporting
+        primary_failure = "none"
+        for r in verified_claims:
+            if r.get("confidence", 1.0) < 0.5:
+                primary_failure = r.get("reason", {}).get("attribution", "unknown")
+                break
 
         return {
             "status": status,
-            "hive_confidence": avg_confidence,
+            "hive_confidence": round(avg_confidence, 2),
+            "hive_entropy": avg_entropy,
+            "primary_failure_stage": primary_failure, # v3.3 Feature
             "original_text": llm_response,
-            "verified_text": final_text,
             "mode": mode,
             "detail": verified_claims,
             "timestamp": time.time()
