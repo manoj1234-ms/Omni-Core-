@@ -33,9 +33,8 @@ class GlobalOmniCore:
         self.active_agents = {}
         self.lock = threading.Lock()
         
-        # v2: Cognitive Cortex Engines (The Brain)
-        self.planner = PlannerEngine()
-        self.router = RouterEngine(self.active_agents) # Registry pointer
+        # v3.3.4: Global Hive Mind Connection (The External Brain)
+        self.global_hub_url = "https://global-hive-mind.onrender.com/"
         
         # v3.3 Specialized Swarm Definitions
         self.swarm_roles = {
@@ -45,7 +44,33 @@ class GlobalOmniCore:
             "judge": {"weight": 1.0, "description": "Finalizes the consensus"}
         }
         
-        print("\n🌍 [GLOBAL CORE]: System initialized. Specialized Swarm active.")
+        print(f"\n🌍 [GLOBAL CORE]: System initialized. Specialized Swarm active.")
+        print(f"📡 [HIVE-SYNC]: Connecting to Global Brain @ {self.global_hub_url}")
+        self.sync_global_knowledge()
+
+    def sync_global_knowledge(self):
+        """
+        Phase 3.3.4: Real-time connectivity check with the global Render hub.
+        """
+        import requests
+        try:
+            print("🌊 [HIVE-SYNC]: Probing Global Hive connectivity...")
+            response = requests.get(f"{self.global_hub_url}/health", timeout=10)
+            if response.status_code == 200:
+                print(f"✅ [HIVE-SYNC]: Connected to Global Brain. Status: {response.json().get('status', 'ACTIVE')}")
+            else:
+                print(f"⚠️ [HIVE-SYNC]: Communication error (HTTP {response.status_code}). Hive Mind is currently starting up.")
+        except Exception:
+            print("⚠️ [HIVE-SYNC]: Connection failed. Running in Local Standalone mode.")
+
+    def run_heartbeat(self):
+        """
+        The Collective Heartbeat: Prunes trust, decays memory, and syncs hives.
+        """
+        while True:
+            time.sleep(300) # Heartbeat every 5 minutes
+            self.prune_stale_agents()
+            self.sync_global_knowledge()
 
     def attach_agent(self, agent_id, manifest=None):
         """

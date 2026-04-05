@@ -1,2 +1,0 @@
-OMNI-CORE RESEARCH SUMMARY: MS-COCO 2024.
-Context Found: Verified Context (Fall-Back): MS-COCO Leaderboard 2024 results confirm State-of-the-Art performance by Relation-Context Transformers.
