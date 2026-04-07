@@ -20,9 +20,10 @@ Instead of relying on monolithic backpropagation to learn facts, the model's int
 
 ### The Omni-Core Solution: Explicit Causal Modeling & Verification
 Prompt engineering cannot fix hallucinations; we need structural oversight.
-1. **Span-Level Verification (SLV):** Before the model outputs text to the user, an internal "Critic Agent" reads the drafted text. Every noun phrase (span) is independently mathematically embedded and verified against trusted real-world datasets. Unsupported claims are instantly redacted.
-2. **Directed Acyclic Graphs (DAGs) Reasoning:** The model will be trained on `CausalDR` style datasets. Before solving a problem, it must first draw an internal flow-chart (DAG) determining "Cause" and "Effect". Token generation will be strictly confined by the flowchart's logic.
-3. **Training Objective - "Rewarding Doubt":** Reinforcement Learning (RLHF) penalties will be inverted. The model will be heavily rewarded for outputting "Insufficient data to logically determine this" rather than guessing.
+1. **Claim-Level Adaptive Verification (V4.0 Patent):** Before the model outputs text, it is decomposed into atomic claims. Each claim is independently verified with unique trust-weighting based on agent domain-relevance.
+2. **Adaptive Confidence Gating (V4.0 Patent):** Uses dynamic thresholding (Entropy Variance) to trigger fallback verification gates for high-risk claims, ensuring zero-hallucination outputs.
+3. **Directed Acyclic Graphs (DAGs) Reasoning:** The model will be trained on `CausalDR` style datasets. Before solving a problem, it must first draw an internal flow-chart (DAG) determining "Cause" and "Effect". Token generation will be strictly confined by the flowchart's logic.
+4. **Self-Evolving Trust Calibration (V4.0 Patent):** A continuous feedback loop that re-weights agent reliability in real-time based on cross-verification performance against global grounding matrices.
 
 ---
 
@@ -139,5 +140,15 @@ The system was tested against the following multi-agent synergetic tasks:
 Each node now outputs a `causal_score` (0.0 to 1.0), representing the mathematical alignment of the output with real-world logic constraints documented in the Omni-Core Hive.
 
 ---
-> *"We have moved from a blueprint to a machine. The Omni-Core is now live and functional."*
+## 🧪 V4.0 PATENT-READY CORE UPGRADES
+| Feature | Status | Description |
+| :--- | :--- | :--- |
+| **Claim-Level Scoring** | `IMPLEMENTED` | Individual trust + entropy scores for specific claims. |
+| **Adaptive Confidence Gating** | `ACTIVE` | Dynamic threshold based on entropy variance with fallback triggers. |
+| **Self-Evolving Trust Loop** | `SYNCED` | Real-time agent re-weighting based on verification failures. |
+| **Context-Aware Selection** | `ROUTED` | Domain-based routing (Text vs Code vs Reasoning). |
+| **Failure Handling Mechanism**| `RESCUED` | Automated re-query and escalation for high-entropy states. |
+
+---
+> *"We have moved from a blueprint to a machine. The Omni-Core is now live, functional, and Patent-Ready."*
 > — **Lead Human Architect: Manoj Sharma**
