@@ -17,7 +17,7 @@ except ImportError:
     from shared_world_logic import GlobalOmniCore
     from os_hook import OSHook
 
-app = FastAPI(title="Omni-Core AGI Hive Hub (v3.1 - THE REAL MVP)")
+app = FastAPI(title="Omni-Core AGI Hive Hub (v4.3 - THE FINAL ARCHITECTURE)")
 
 # --- GLOBAL CORS & SECURITY ---
 app.add_middleware(
@@ -32,26 +32,39 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "OMNI_SECRET_HIVE_MVP_99")
 MASTER_KEY = os.environ.get("OMNI_KEY", "OMNI-MASTER-2026")
 DASHBOARD_PASS = os.environ.get("DASHBOARD_PASS", "AGI-ACCESS-42")
 
-core = GlobalOmniCore()
-os_hook = OSHook(core=core)
+core: Optional[GlobalOmniCore] = None
+os_hook: Optional[OSHook] = None
 agent_heartbeats = {} # {agent_id: timestamp}
 
-# --- THREADS ---
 def prune_stale_agents():
     while True:
-        now = time.time()
-        # Phase 2: Apply Trust Decay
-        core.apply_trust_decay()
-        
-        stale_agents = [aid for aid, ts in agent_heartbeats.items() if (now - ts) > 60]
-        for aid in stale_agents:
-            if aid in core.active_agents:
-                del core.active_agents[aid]
-            if aid in agent_heartbeats:
-                del agent_heartbeats[aid]
+        if core:
+            now = time.time()
+            core.apply_trust_decay()
+            
+            stale_agents = [aid for aid, ts in agent_heartbeats.items() if (now - ts) > 60]
+            for aid in stale_agents:
+                if aid in core.active_agents:
+                    del core.active_agents[aid]
+                if aid in agent_heartbeats:
+                    del agent_heartbeats[aid]
         time.sleep(10)
 
-threading.Thread(target=prune_stale_agents, daemon=True).start()
+@app.on_event("startup")
+async def startup_event():
+    """
+    🧬 Omni-Core v4.3: Secure Async Initialization.
+    Prevents port-binding delays on Render by deferring heavy sync logic.
+    """
+    global core, os_hook
+    print("\n🚀 [OMNI-CORE]: Initializing v4.3 Cognitive Engines...")
+    core = GlobalOmniCore()
+    os_hook = OSHook(core=core)
+    
+    # Deferred sync to prevent startup hangs
+    threading.Thread(target=core.sync_global_knowledge, daemon=True).start()
+    threading.Thread(target=prune_stale_agents, daemon=True).start()
+    print("✅ [OMNI-CORE]: Engines Active. Port bound.")
 
 # --- MODELS ---
 class GroundRequest(BaseModel):
@@ -75,7 +88,7 @@ async def verify_token(authorization: str = Header(...)):
     except:
         raise HTTPException(status_code=401, detail="Access Denied")
 
-# --- v3.1 CORE ENDPOINTS ---
+# --- v4.3 CORE ENDPOINTS (CWEVS) ---
 
 @app.post("/attach")
 async def attach_agent(data: dict = Body(...), x_omni_key: str = Header(None)):
@@ -132,7 +145,8 @@ async def landing(request: Request):
     # Professional Landing HTML (Simplified for brevity)
     return """
     <html><head><title>Omni-Core AGI</title><style>body{background:#000;color:#0f0;font-family:monospace;text-align:center;padding:50px;}</style></head>
-    <body><h1>🛰️ OMNI-CORE HIVE HUB (v3.1)</h1><p>The Production-Ready AGI Intelligence Layer.</p>
+    <body><h1>🛰️ OMNI-CORE HIVE HUB (v4.3)</h1><p>The Production-Ready AGI Intelligence Layer.</p>
+    <p><i>Lead Architect: Manoj Sharma</i></p>
     <a href="/dashboard" style="color:#0f0">[ ACCESS HIVE DASHBOARD ]</a></body></html>
     """
 
@@ -146,7 +160,9 @@ async def dashboard_view():
 
 @app.get("/health")
 async def health():
-    return {"status": "ONLINE", "active_nodes": len(core.active_agents), "version": "3.1.0-MVP"}
+    if not core:
+        return {"status": "STARTING", "active_nodes": 0, "version": "4.3.0-CWEVS"}
+    return {"status": "ONLINE", "active_nodes": len(core.active_agents), "version": "4.3.0-CWEVS"}
 
 if __name__ == "__main__":
     import uvicorn

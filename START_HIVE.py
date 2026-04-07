@@ -7,12 +7,12 @@ import os
 # Using Production Sync: https://global-hive-mind.onrender.com
 
 def start_services():
-    print("🚀 [OMNI-CORE]: Igniting Hive Mind (Cortex v3.3)...")
+    print("🚀 [OMNI-CORE]: Igniting Hive Mind (Cortex v4.3)...")
     print("🌐 [GLOBAL-SYNC]: Connecting to Official Hub: https://global-hive-mind.onrender.com\n")
     
     # 1. Orchestrator
     cortex_process = subprocess.Popen([sys.executable, "orchestrator.py"], cwd="CortexHub")
-    print("✅ [CORTEX]: Local Hub ready on port 5112.")
+    print("✅ [CORTEX]: Local Hub v4.3 ready on port 5112.")
     
     # 2. Text Agent
     text_process = subprocess.Popen([sys.executable, "text_node.py"], cwd="HiveNodes")

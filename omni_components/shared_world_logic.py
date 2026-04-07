@@ -34,7 +34,7 @@ class GlobalOmniCore:
         self.lock = threading.Lock()
         
         # v3.3.4: Global Hive Mind Connection (The External Brain)
-        self.global_hub_url = "https://global-hive-mind.onrender.com/"
+        self.global_hub_url = "https://global-hive-mind.onrender.com"
         
         # v3.3 Specialized Swarm Definitions
         self.swarm_roles = {
@@ -44,9 +44,9 @@ class GlobalOmniCore:
             "judge": {"weight": 1.0, "description": "Finalizes the consensus"}
         }
         
-        print(f"\n🌍 [GLOBAL CORE]: System initialized. Specialized Swarm active.")
-        print(f"📡 [HIVE-SYNC]: Connecting to Global Brain @ {self.global_hub_url}")
-        self.sync_global_knowledge()
+        print(f"\n🌍 [GLOBAL CORE]: System initialized. Specialized Swarm v4.3 active.")
+        print(f"📡 [HIVE-SYNC]: Global Hub configured: {self.global_hub_url}")
+        # Sync is now managed by the Hub startup lifecycle to prevent blocking.
 
     def sync_global_knowledge(self):
         """
